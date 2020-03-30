@@ -82,7 +82,7 @@ def update_spotify_playlist(
         if len(results) > 0:
             uri = results[0]['uri']
             tracks.append(uri)
-            print('Found track with query={} as uri={}'.format(query, uri))
+            print('Found track with query={} as uri={}'.format(query, uri), flush=True)
         else:
             query = prepare_search_query_track_only(title)
             res = sp.search(query, limit=1, type='track', market=market)
@@ -90,9 +90,9 @@ def update_spotify_playlist(
             if len(results) > 0:
                 uri = results[0]['uri']
                 tracks.append(uri)
-                print('Found track with query={} as uri={}'.format(query, uri))
+                print('Found track with query={} as uri={}'.format(query, uri), flush=True)
             else:
-                print('Not found any track with query={}'.format(query))
+                print('Not found any track with query={}'.format(query), flush=True)
 
     user_id = get_user_id(sp)
     sp.user_playlist_add_tracks(user_id, playlist_id, tracks)
