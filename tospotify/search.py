@@ -3,30 +3,24 @@ from typing import List, Callable, Optional
 import m3u8
 from spotipy import Spotify
 
-from .queries import QUERIES
+from .queries import QUERY_COMPILERS
 
 
 def get_user_id(sp: Spotify) -> str:
     return sp.current_user()['id']
 
 
-def create_spotify_playlist(
-    sp: Spotify,
-    playlist_name: str,
-    public: bool = False,
-    description: str = ''
-) -> str:
+def create_spotify_playlist(sp: Spotify, playlist_name: str, public: bool = False) -> str:
     user_id = get_user_id(sp)
-    res = sp.user_playlist_create(user_id, playlist_name, public=public, description=description)
-    # TODO: validate res
+    res = sp.user_playlist_create(user_id, playlist_name, public=public)
     playlist_id = res['id']
 
     return playlist_id
 
 
-def _find_track(sp: Spotify, song: str, query_creators: List[Callable], market: str = None) -> Optional[str]:
-    for func in query_creators:
-        query = func(song)
+def _find_track(sp: Spotify, song: str, query_compilers: List[Callable], market: str = None) -> Optional[str]:
+    for query_compile in query_compilers:
+        query = query_compile(song)
         response = sp.search(query, limit=1, type='track', market=market)
         results = response['tracks']['items']
         if len(results) > 0:
@@ -48,14 +42,15 @@ def add_tracks(sp: Spotify, playlist_id: str, tracks: List[str]) -> None:
 def update_spotify_playlist(
     sp: Spotify,
     playlist_path: str,
-    playlist_id: str
+    playlist_id: str,
+    market: str = None
 ) -> None:
     # TODO: can this fail besides not finding file?
     playlist = m3u8.load(playlist_path)
 
     tracks = []
     for song in playlist.segments:
-        track_uri = _find_track(sp, song, QUERIES)
+        track_uri = _find_track(sp, song, QUERY_COMPILERS, market)
         if track_uri:
             tracks.append(track_uri)
         else:

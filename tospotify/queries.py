@@ -53,4 +53,4 @@ def search_title_only(song: Segment) -> str:
     return query
 
 
-QUERIES = [search_artist_and_title, search_title_only]
+QUERY_COMPILERS = [search_artist_and_title, search_title_only]
