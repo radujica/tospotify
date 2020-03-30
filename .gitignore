@@ -2,5 +2,6 @@
 .idea
 *.iml
 
-# this sets up the SPOTIFY_CLIENT_ID and secret before running search.py
+# this sets up the relevant envvars before running search.py
 run.sh
+.cache*
