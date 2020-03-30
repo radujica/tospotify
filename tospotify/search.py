@@ -11,7 +11,7 @@ def get_user_id(sp: Spotify) -> str:
 
 # TODO: handle utf-8 properly
 def clean_name(name: str) -> str:
-    name = re.sub(r'[^a-zA-Z0-9\s]', '', name)
+    name = re.sub(r'[^a-zA-Z0-9\-\s]', '', name)
     name = re.sub(r'\s+', ' ', name)
     name = name.strip()
 
@@ -21,9 +21,8 @@ def clean_name(name: str) -> str:
 def process_song_name(song_name: str) -> Tuple[str, str]:
     song_name = str(song_name)
 
-    # TODO: handle if artist or title contains '-'
-    song_split = song_name.split('-')
-    assert len(song_split) == 2
+    # TODO: handle if artist contains '-'
+    song_split = song_name.split('-', 1)
 
     artist = clean_name(song_split[0])
     title = clean_name(song_split[1])

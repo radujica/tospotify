@@ -5,7 +5,7 @@ from spotipy.util import prompt_for_user_token
 
 from tospotify import create_spotify_playlist, update_spotify_playlist
 
-playlist_path = 'D:/Workspace/test_playlist.m3u'
+playlist_path = 'D:/Workspace/The Mix.m3u'
 
 
 def get_token(username):
@@ -22,8 +22,8 @@ def main():
     if token:
         sp = Spotify(auth=token)
         # TODO: add option to just use the passed id
-        # playlist_id = create_spotify_playlist(sp, 'test_playlist')
-        update_spotify_playlist(sp, playlist_path, '0DfiHvIVrPomsleDMrjvLq')
+        playlist_id = create_spotify_playlist(sp, 'The Mix')
+        update_spotify_playlist(sp, playlist_path, playlist_id)
     else:
         print('no token :(')
 
