@@ -6,7 +6,8 @@ from m3u8 import Segment
 
 # TODO: handle utf-8 properly
 def _clean_name(name: str) -> str:
-    name = re.sub(r'[^a-zA-Z0-9\-\s]', '', name)
+    # keep only ascii and extra relevant characters: -\s,
+    name = re.sub(r'[^a-zA-Z0-9\-\s,]', '', name)
     name = re.sub(r'\s+', ' ', name)
     name = name.strip()
 
