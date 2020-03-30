@@ -1,4 +1,3 @@
-import json
 import re
 from typing import Tuple
 
@@ -46,6 +45,12 @@ def prepare_search_query(artist: str, title: str) -> str:
     return query
 
 
+def prepare_search_query_track_only(title: str) -> str:
+    query = prepare_search_query_component(title, 'track')
+
+    return query
+
+
 def create_spotify_playlist(
     sp: Spotify,
     playlist_name: str,
@@ -66,7 +71,7 @@ def update_spotify_playlist(
     playlist_id: str,
     market: str = None
 ) -> None:
-    # TODO: can this fail?
+    # TODO: can this fail besides not finding file?
     playlist = m3u8.load(playlist_path)
 
     tracks = []
@@ -74,11 +79,21 @@ def update_spotify_playlist(
         artist, title = process_song_name(song.title)
         query = prepare_search_query(artist, title)
         res = sp.search(query, limit=1, type='track', market=market)
-        # TODO: validate res
-        print(json.dumps(res, indent=2))
-        uri = res['tracks']['items'][0]['uri']
-        tracks.append(uri)
-        print(uri)
+        results = res['tracks']['items']
+        if len(results) > 0:
+            uri = results[0]['uri']
+            tracks.append(uri)
+            print('Found track with query={} as uri={}'.format(query, uri))
+        else:
+            query = prepare_search_query_track_only(title)
+            res = sp.search(query, limit=1, type='track', market=market)
+            results = res['tracks']['items']
+            if len(results) > 0:
+                uri = results[0]['uri']
+                tracks.append(uri)
+                print('Found track with query={} as uri={}'.format(query, uri))
+            else:
+                print('Not found any track with query={}'.format(query))
 
     user_id = get_user_id(sp)
     sp.user_playlist_add_tracks(user_id, playlist_id, tracks)
