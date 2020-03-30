@@ -95,4 +95,7 @@ def update_spotify_playlist(
                 print('Not found any track with query={}'.format(query), flush=True)
 
     user_id = get_user_id(sp)
-    sp.user_playlist_add_tracks(user_id, playlist_id, tracks)
+    max_tracks_per_request = 100
+    for i in range(len(tracks) // max_tracks_per_request + 1):
+        tracks_subset = tracks[i * max_tracks_per_request:(i + 1) * max_tracks_per_request]
+        sp.user_playlist_add_tracks(user_id, playlist_id, tracks_subset)
