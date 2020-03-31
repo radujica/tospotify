@@ -73,6 +73,7 @@ class QueryMultipleArtist(Query):
         artists = self.artist.split(self.sep)
         queries = []
         for artist in artists:
+            artist = artist.strip()
             query = QueryArtistTitle(artist, self.title)
             queries.append(query.compile()[0])
 
