@@ -3,7 +3,7 @@ import pytest
 from tospotify.queries import QueryArtistTitle, QueryMultipleArtists, QueryTitle, QueryWildcard
 
 
-@pytest.mark.parametrize("artist,title,query_class,expected", [
+@pytest.mark.parametrize('artist,title,query_class,expected', [
     ('Sting', 'Shape of my heart', QueryArtistTitle,
      ['artist:"Sting" AND track:"Shape of my heart"']),
     ('Sting;The Police', 'Shape of my heart', QueryMultipleArtists,
