@@ -1,11 +1,6 @@
 import abc
 
 
-def _prepare_search_query_component(s: str, query_type: str) -> str:
-    # need to escape the quotes else requests will url-encode them
-    return query_type + ':' + '\"' + s + '\"'
-
-
 class Query(abc.ABC):
     def __init__(self, artist, title):
         self.artist = artist
@@ -19,14 +14,19 @@ class Query(abc.ABC):
         """Return list of queries"""
         raise NotImplementedError
 
+    @staticmethod
+    def _prepare_search_query_component(s: str, query_type: str) -> str:
+        # need to escape the quotes else requests will url-encode them
+        return query_type + ':' + '\"' + s + '\"'
+
 
 class QueryArtistTitle(Query):
     def makes_sense(self):
         return True
 
     def compile(self):
-        artist = _prepare_search_query_component(self.artist, 'artist')
-        title = _prepare_search_query_component(self.title, 'track')
+        artist = Query._prepare_search_query_component(self.artist, 'artist')
+        title = Query._prepare_search_query_component(self.title, 'track')
 
         query = ' '.join([artist, 'AND', title])
 
@@ -38,7 +38,7 @@ class QueryTitle(Query):
         return True
 
     def compile(self):
-        query = _prepare_search_query_component(self.title, 'track')
+        query = Query._prepare_search_query_component(self.title, 'track')
 
         return [query]
 
