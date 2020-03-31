@@ -56,12 +56,16 @@ class QueryWildcard(Query):
         return [Query._surround_with_quotes(self.artist + ' ' + self.title)]
 
 
-class QueryMultipleArtists(Query):
+class QuerySplitArtist(Query):
+    def __init__(self, artist, title, sep):
+        self.sep = sep
+        super().__init__(artist, title)
+
     def makes_sense(self) -> bool:
-        return ';' in self.artist
+        return self.sep in self.artist
 
     def compile(self) -> List[str]:
-        artists = self.artist.split(';')
+        artists = self.artist.split(self.sep)
         queries = []
         for artist in artists:
             query = QueryArtistTitle(artist, self.title)
@@ -70,7 +74,22 @@ class QueryMultipleArtists(Query):
         return queries
 
 
+class QueryMultipleArtists(QuerySplitArtist):
+    def __init__(self, artist, title):
+        super().__init__(artist, title, ';')
+
+
+class QueryAndArtists(QuerySplitArtist):
+    def __init__(self, artist, title):
+        super().__init__(artist, title, 'and')
+
+
+class QueryAndSymbolArtists(QuerySplitArtist):
+    def __init__(self, artist, title):
+        super().__init__(artist, title, '&')
+
+
 # in reversed order, so queries will be tried from right to left
 # first query always tried
-ADDITIONAL_QUERIES = [QueryWildcard, QueryTitle, QueryMultipleArtists]
+ADDITIONAL_QUERIES = [QueryWildcard, QueryTitle, QueryAndArtists, QueryAndSymbolArtists, QueryMultipleArtists]
 DEFAULT_QUERY = QueryArtistTitle

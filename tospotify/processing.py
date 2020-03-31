@@ -4,11 +4,12 @@ from typing import Tuple
 
 # TODO: handle utf-8 properly
 def clean_name(name: str) -> str:
-    # keep only ascii and extra relevant characters: \s,
+    # keep only ascii and extra relevant characters: \s,&
     # Spotify seems to handle single quotes ' well, so can remove
-    name = re.sub(r'[^a-zA-Z0-9\s,;]', '', name)
+    name = re.sub(r'[^a-zA-Z0-9\s,;&]', '', name)
     name = re.sub(r'\s+', ' ', name)
     name = name.strip()
+    name = name.lower()
 
     return name
 
