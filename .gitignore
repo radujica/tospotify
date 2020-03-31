@@ -1,7 +1,16 @@
 
+# intellij
 .idea
 *.iml
 
+# pytest
+.pytest_cache
+
+# python
+__pycache__
+
 # this sets up the relevant envvars before running search.py
 run.sh
+
+# created by spotipy for credentials
 .cache*

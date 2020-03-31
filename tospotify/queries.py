@@ -52,7 +52,7 @@ class QueryMultipleArtists(Query):
         queries = []
         for artist in artists:
             query = QueryArtistTitle(artist, self.title)
-            queries.append(query.compile())
+            queries.append(query.compile()[0])
 
         return queries
 
