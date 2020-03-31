@@ -1,6 +1,6 @@
 import abc
+import logging
 from typing import List
-
 
 SEP_SEMICOLON = ';'
 SEP_AND = ' and '
@@ -104,8 +104,8 @@ class QueryTogetherArtist(QueryMultipleArtist):
     def compile(self) -> List[str]:
         artist = self.artist.replace(self.sep, self.to_sep, 1)
         if self.sep in artist:
-            print('Warning! Encountered more than 2 occurrence of sep={} when detecting artist as multiple artists. '
-                  'artist={}'.format(self.sep, self.artist))
+            logging.warning('Encountered more than 2 occurrences of sep={} when detecting artist '
+                            'as multiple artists. artist={}'.format(self.sep, self.artist))
         query = QueryArtistTitle(artist, self.title).compile()[0]
 
         return [query]

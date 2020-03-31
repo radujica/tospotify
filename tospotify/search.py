@@ -1,3 +1,4 @@
+import logging
 from queue import Queue
 from typing import List, Optional
 
@@ -20,14 +21,15 @@ def create_spotify_playlist(sp: Spotify, playlist_name: str, public: bool = Fals
     return playlist_id
 
 
-def _run_query(sp: Spotify, query: str, market: str = None) -> Optional[str]:
+def _run_query(sp: Spotify, query: str, market: str = None, iteration: int = 0) -> Optional[str]:
     response = sp.search(query, limit=1, type='track', market=market)
     results = response['tracks']['items']
     if len(results) > 0:
         uri = results[0]['uri']
-        print('Found track with query={} as uri={}'.format(query, uri), flush=True)
+        logging.info('Found track with query={} as uri={}'.format(query, uri))
         return uri
     else:
+        logging.info('{}Could not find any track with query={}'.format('-' * iteration, query))
         return None
 
 
@@ -38,9 +40,10 @@ def _find_track(sp: Spotify, song: m3u8.Segment, market: str = None) -> Optional
     queue.put(DEFAULT_QUERY(artist, title).compile()[0])
     query_class_pool = list(ADDITIONAL_QUERIES)
     uri = None
+    iteration = 0
     while uri is None and not queue.empty():
         query = queue.get()
-        uri = _run_query(sp, query, market=market)
+        uri = _run_query(sp, query, market=market, iteration=iteration)
 
         if uri is None and queue.empty():
             while queue.empty():
@@ -49,6 +52,8 @@ def _find_track(sp: Spotify, song: m3u8.Segment, market: str = None) -> Optional
                     query_strings = query.compile()
                     for q in query_strings:
                         queue.put(q)
+
+        iteration += 1
 
     return uri
 
@@ -76,9 +81,9 @@ def update_spotify_playlist(
         if track_uri:
             tracks.append(track_uri)
         else:
-            print('Not found any track for song with artist - title={}'.format(song.title), flush=True)
+            logging.warning('Could not find any track for song with artist - title={}'.format(song.title))
 
     if len(tracks) == 0:
-        print('Not found any tracks!')
+        logging.error('Could not find any tracks!')
     else:
         add_tracks(sp, playlist_id, tracks)
