@@ -1,3 +1,4 @@
+import logging
 import os
 
 from spotipy import Spotify
@@ -5,7 +6,7 @@ from spotipy.util import prompt_for_user_token
 
 from tospotify import create_spotify_playlist, update_spotify_playlist
 
-playlist_name = 'test_playlist'
+playlist_name = 'Older + Party'
 playlist_path = 'D:/Workspace/{}.m3u'.format(playlist_name)
 
 
@@ -17,6 +18,9 @@ def get_token(username):
 
 
 def main():
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+
     username = os.getenv('SPOTIPY_USERNAME')
     token = get_token(username)
 

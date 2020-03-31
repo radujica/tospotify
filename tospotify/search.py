@@ -24,12 +24,13 @@ def create_spotify_playlist(sp: Spotify, playlist_name: str, public: bool = Fals
 def _run_query(sp: Spotify, query: str, market: str = None, iteration: int = 0) -> Optional[str]:
     response = sp.search(query, limit=1, type='track', market=market)
     results = response['tracks']['items']
+    prepend_pretty_print = '-' * iteration
     if len(results) > 0:
         uri = results[0]['uri']
-        logging.info('Found track with query={} as uri={}'.format(query, uri))
+        logging.info('{}Found track with query={} as uri={}'.format(prepend_pretty_print, query, uri))
         return uri
     else:
-        logging.info('{}Could not find any track with query={}'.format('-' * iteration, query))
+        logging.info('{}Could not find any track with query={}'.format(prepend_pretty_print, query))
         return None
 
 
@@ -46,7 +47,7 @@ def _find_track(sp: Spotify, song: m3u8.Segment, market: str = None) -> Optional
         uri = _run_query(sp, query, market=market, iteration=iteration)
 
         if uri is None and queue.empty():
-            while queue.empty():
+            while queue.empty() and len(query_class_pool) > 0:
                 query = query_class_pool.pop()(artist, title)
                 if query.makes_sense():
                     query_strings = query.compile()
