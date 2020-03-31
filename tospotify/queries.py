@@ -2,6 +2,11 @@ import abc
 from typing import List
 
 
+SEP_SEMICOLON = ';'
+SEP_AND = ' and '
+SEP_AND_SYMBOL = ' & '
+
+
 class Query(abc.ABC):
     def __init__(self, artist: str, title: str) -> None:
         self.artist = artist
@@ -56,7 +61,7 @@ class QueryWildcard(Query):
         return [Query._surround_with_quotes(self.artist + ' ' + self.title)]
 
 
-class QuerySplitArtist(Query):
+class QueryMultipleArtist(Query):
     def __init__(self, artist, title, sep):
         self.sep = sep
         super().__init__(artist, title)
@@ -74,22 +79,56 @@ class QuerySplitArtist(Query):
         return queries
 
 
-class QueryMultipleArtists(QuerySplitArtist):
+class QuerySplitMultipleArtists(QueryMultipleArtist):
     def __init__(self, artist, title):
-        super().__init__(artist, title, ';')
+        super().__init__(artist, title, SEP_SEMICOLON)
 
 
-class QueryAndArtists(QuerySplitArtist):
+class QuerySplitAndArtists(QueryMultipleArtist):
     def __init__(self, artist, title):
-        super().__init__(artist, title, 'and')
+        # added spaces to avoid and being inside a word, e.g. andrew
+        super().__init__(artist, title, SEP_AND)
 
 
-class QueryAndSymbolArtists(QuerySplitArtist):
+class QuerySplitAndSymbolArtists(QueryMultipleArtist):
     def __init__(self, artist, title):
-        super().__init__(artist, title, '&')
+        super().__init__(artist, title, SEP_AND_SYMBOL)
 
 
-# in reversed order, so queries will be tried from right to left
+class QueryTogetherArtist(QueryMultipleArtist):
+    def __init__(self, artist, title, sep, to_sep):
+        self.to_sep = to_sep
+        super().__init__(artist, title, sep)
+
+    def compile(self) -> List[str]:
+        artist = self.artist.replace(self.sep, self.to_sep, 1)
+        if self.sep in artist:
+            print('Warning! Encountered more than 2 occurrence of sep={} when detecting artist as multiple artists. '
+                  'artist={}'.format(self.sep, self.artist))
+        query = QueryArtistTitle(artist, self.title).compile()[0]
+
+        return [query]
+
+
+class QueryMultipleAndArtists(QueryTogetherArtist):
+    def __init__(self, artist, title):
+        super().__init__(artist, title, SEP_AND, SEP_AND_SYMBOL)
+
+
+class QueryMultipleAndSymbolArtists(QueryTogetherArtist):
+    def __init__(self, artist, title):
+        super().__init__(artist, title, SEP_AND_SYMBOL, SEP_AND)
+
+
 # first query always tried
-ADDITIONAL_QUERIES = [QueryWildcard, QueryTitle, QueryAndArtists, QueryAndSymbolArtists, QueryMultipleArtists]
 DEFAULT_QUERY = QueryArtistTitle
+# in reversed order, so queries will be tried bottom up
+ADDITIONAL_QUERIES = [
+    QueryWildcard,
+    QueryTitle,
+    QuerySplitAndArtists,
+    QuerySplitAndSymbolArtists,
+    QueryMultipleAndSymbolArtists,
+    QueryMultipleAndArtists,
+    QuerySplitMultipleArtists
+]
