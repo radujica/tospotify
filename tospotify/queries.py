@@ -1,29 +1,4 @@
-import re
-from typing import Tuple
-
-from m3u8 import Segment
-
-
-# TODO: handle utf-8 properly
-def _clean_name(name: str) -> str:
-    # keep only ascii and extra relevant characters: -\s,
-    name = re.sub(r'[^a-zA-Z0-9\-\s,]', '', name)
-    name = re.sub(r'\s+', ' ', name)
-    name = name.strip()
-
-    return name
-
-
-def _process_song_name(song_name: str) -> Tuple[str, str]:
-    song_name = str(song_name)
-
-    # TODO: handle if artist contains '-' or there's no '-'
-    song_split = song_name.split('-', 1)
-
-    artist = _clean_name(song_split[0])
-    title = _clean_name(song_split[1])
-
-    return artist, title
+import abc
 
 
 def _prepare_search_query_component(s: str, query_type: str) -> str:
@@ -31,27 +6,63 @@ def _prepare_search_query_component(s: str, query_type: str) -> str:
     return query_type + ':' + '\"' + s + '\"'
 
 
-def _prepare_search_query(artist: str, title: str) -> str:
-    artist = _prepare_search_query_component(artist, 'artist')
-    title = _prepare_search_query_component(title, 'track')
+class Query(abc.ABC):
+    def __init__(self, artist, title):
+        self.artist = artist
+        self.title = title
 
-    query = ' '.join([artist, 'AND', title])
+    @staticmethod
+    def makes_sense(artist, title):
+        """check if this query makes sense; returns bool;
+        static because attempting to avoid creating unnecessary objects"""
+        raise NotImplementedError
 
-    return query
-
-
-def search_artist_and_title(song: Segment) -> str:
-    artist, title = _process_song_name(song.title)
-    query = _prepare_search_query(artist, title)
-
-    return query
-
-
-def search_title_only(song: Segment) -> str:
-    artist, title = _process_song_name(song.title)
-    query = _prepare_search_query_component(title, 'track')
-
-    return query
+    def compile(self):
+        """Return list of queries"""
+        raise NotImplementedError
 
 
-QUERY_COMPILERS = [search_artist_and_title, search_title_only]
+class QueryArtistTitle(Query):
+    @staticmethod
+    def makes_sense(artist, title):
+        return True
+
+    def compile(self):
+        artist = _prepare_search_query_component(self.artist, 'artist')
+        title = _prepare_search_query_component(self.title, 'track')
+
+        query = ' '.join([artist, 'AND', title])
+
+        return [query]
+
+
+class QueryTitle(Query):
+    @staticmethod
+    def makes_sense(artist, title):
+        return True
+
+    def compile(self):
+        query = _prepare_search_query_component(self.title, 'track')
+
+        return [query]
+
+
+class QueryMultipleArtists(Query):
+    @staticmethod
+    def makes_sense(artist, title):
+        return ';' in artist
+
+    def compile(self):
+        artists = self.artist.split(';')
+        queries = []
+        for artist in artists:
+            query = QueryArtistTitle(artist, self.title)
+            queries.append(query.compile())
+
+        return queries
+
+
+# in reversed order, so queries will be tried from right to left
+# first query always tried
+ADDITIONAL_QUERIES = [QueryTitle, QueryMultipleArtists]
+DEFAULT_QUERY = QueryArtistTitle

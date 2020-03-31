@@ -1,9 +1,11 @@
-from typing import List, Callable, Optional
+from typing import List, Optional
+from queue import Queue
 
 import m3u8
 from spotipy import Spotify
 
-from .queries import QUERY_COMPILERS
+from .processing import process_song_name
+from .queries import ADDITIONAL_QUERIES, DEFAULT_QUERY
 
 
 def get_user_id(sp: Spotify) -> str:
@@ -18,17 +20,37 @@ def create_spotify_playlist(sp: Spotify, playlist_name: str, public: bool = Fals
     return playlist_id
 
 
-def _find_track(sp: Spotify, song: str, query_compilers: List[Callable], market: str = None) -> Optional[str]:
-    for query_compile in query_compilers:
-        query = query_compile(song)
-        response = sp.search(query, limit=1, type='track', market=market)
-        results = response['tracks']['items']
-        if len(results) > 0:
-            uri = results[0]['uri']
-            print('Found track with query={} as uri={}'.format(query, uri), flush=True)
-            return uri
+def _run_query(sp: Spotify, query: str, market: str = None) -> Optional[str]:
+    response = sp.search(query, limit=1, type='track', market=market)
+    results = response['tracks']['items']
+    if len(results) > 0:
+        uri = results[0]['uri']
+        print('Found track with query={} as uri={}'.format(query, uri), flush=True)
+        return uri
+    else:
+        return None
 
-    return None
+
+def _find_track(sp: Spotify, song: m3u8.Segment, market: str = None) -> Optional[str]:
+    artist, title = process_song_name(song.title())
+
+    queue = Queue()
+    queue.put(DEFAULT_QUERY(artist, title).compile())
+    query_class_pool = list(ADDITIONAL_QUERIES)
+    uri = None
+    while uri is None and not queue.empty():
+        query = queue.get()
+        uri = _run_query(sp, query, market=market)
+
+        if uri is None and queue.empty():
+            while queue.empty():
+                query_class = query_class_pool.pop()
+                if query_class.makes_sense(artist, title):
+                    query = query_class(artist, title).compile()
+                    for q in query:
+                        queue.put(q)
+
+    return uri
 
 
 def add_tracks(sp: Spotify, playlist_id: str, tracks: List[str]) -> None:
@@ -50,7 +72,7 @@ def update_spotify_playlist(
 
     tracks = []
     for song in playlist.segments:
-        track_uri = _find_track(sp, song, QUERY_COMPILERS, market)
+        track_uri = _find_track(sp, song.title,  market)
         if track_uri:
             tracks.append(track_uri)
         else:
