@@ -1,5 +1,5 @@
-from typing import List, Optional
 from queue import Queue
+from typing import List, Optional
 
 import m3u8
 from spotipy import Spotify
@@ -35,7 +35,7 @@ def _find_track(sp: Spotify, song: m3u8.Segment, market: str = None) -> Optional
     artist, title = process_song_name(song.title())
 
     queue = Queue()
-    queue.put(DEFAULT_QUERY(artist, title).compile())
+    queue.put(DEFAULT_QUERY(artist, title).compile()[0])
     query_class_pool = list(ADDITIONAL_QUERIES)
     uri = None
     while uri is None and not queue.empty():
@@ -44,10 +44,10 @@ def _find_track(sp: Spotify, song: m3u8.Segment, market: str = None) -> Optional
 
         if uri is None and queue.empty():
             while queue.empty():
-                query_class = query_class_pool.pop()
-                if query_class.makes_sense(artist, title):
-                    query = query_class(artist, title).compile()
-                    for q in query:
+                query = query_class_pool.pop()(artist, title)
+                if query.makes_sense():
+                    query_strings = query.compile()
+                    for q in query_strings:
                         queue.put(q)
 
     return uri

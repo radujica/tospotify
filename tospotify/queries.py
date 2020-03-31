@@ -11,10 +11,8 @@ class Query(abc.ABC):
         self.artist = artist
         self.title = title
 
-    @staticmethod
-    def makes_sense(artist, title):
-        """check if this query makes sense; returns bool;
-        static because attempting to avoid creating unnecessary objects"""
+    def makes_sense(self):
+        """check if this query makes sense; returns bool"""
         raise NotImplementedError
 
     def compile(self):
@@ -23,8 +21,7 @@ class Query(abc.ABC):
 
 
 class QueryArtistTitle(Query):
-    @staticmethod
-    def makes_sense(artist, title):
+    def makes_sense(self):
         return True
 
     def compile(self):
@@ -37,8 +34,7 @@ class QueryArtistTitle(Query):
 
 
 class QueryTitle(Query):
-    @staticmethod
-    def makes_sense(artist, title):
+    def makes_sense(self):
         return True
 
     def compile(self):
@@ -48,9 +44,8 @@ class QueryTitle(Query):
 
 
 class QueryMultipleArtists(Query):
-    @staticmethod
-    def makes_sense(artist, title):
-        return ';' in artist
+    def makes_sense(self):
+        return ';' in self.artist
 
     def compile(self):
         artists = self.artist.split(';')
