@@ -4,6 +4,7 @@ from typing import List
 
 # TODO: atm these presume the strings are cleaned and lowercase; improve
 SEP_SEMICOLON = ';'
+# added spaces to avoid and being inside a word, e.g. andrew
 SEP_AND = ' and '
 SEP_AND_SYMBOL = ' & '
 TOKEN_THE = 'the '
@@ -91,7 +92,6 @@ class QuerySplitMultipleArtists(QueryMultipleArtist):
 
 class QuerySplitAndArtists(QueryMultipleArtist):
     def __init__(self, artist, title):
-        # added spaces to avoid and being inside a word, e.g. andrew
         super().__init__(artist, title, SEP_AND)
 
 

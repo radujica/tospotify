@@ -30,13 +30,14 @@ def _run_query(sp: Spotify, query: str, market: str = None, iteration: int = 0) 
         logging.info('{}Found track with query={} as uri={}'.format(prepend_pretty_print, query, uri))
         return uri
     else:
-        logging.info('{}Could not find any track with query={}'.format(prepend_pretty_print, query))
+        logging.info('{}Could not find track with query={}'.format(prepend_pretty_print, query))
         return None
 
 
 def _find_track(sp: Spotify, song: m3u8.Segment, market: str = None) -> Optional[str]:
     artist, title = process_song_name(song.title())
 
+    # using a queue to avoid computing all queries if not necessary
     queue = Queue()
     queue.put(DEFAULT_QUERY(artist, title).compile()[0])
     query_class_pool = list(ADDITIONAL_QUERIES)
