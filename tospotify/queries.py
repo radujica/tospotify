@@ -2,9 +2,11 @@ import abc
 import logging
 from typing import List
 
+# TODO: atm these presume the strings are cleaned and lowercase; improve
 SEP_SEMICOLON = ';'
 SEP_AND = ' and '
 SEP_AND_SYMBOL = ' & '
+TOKEN_THE = 'the '
 
 
 class Query(abc.ABC):
@@ -12,10 +14,12 @@ class Query(abc.ABC):
         self.artist = artist
         self.title = title
 
+    @abc.abstractmethod
     def makes_sense(self) -> bool:
         """check if this query makes sense; returns bool"""
         raise NotImplementedError
 
+    @abc.abstractmethod
     def compile(self) -> List[str]:
         """Return list of queries"""
         raise NotImplementedError
@@ -74,8 +78,8 @@ class QueryMultipleArtist(Query):
         queries = []
         for artist in artists:
             artist = artist.strip()
-            query = QueryArtistTitle(artist, self.title)
-            queries.append(query.compile()[0])
+            query = QueryArtistTitle(artist, self.title).compile()[0]
+            queries.append(query)
 
         return queries
 
@@ -106,9 +110,9 @@ class QueryTogetherArtist(QueryMultipleArtist):
         if self.sep in artist:
             logging.warning('Encountered more than 2 occurrences of sep={} when detecting artist '
                             'as multiple artists. artist={}'.format(self.sep, self.artist))
-        query = QueryArtistTitle(artist, self.title).compile()[0]
+        query = QueryArtistTitle(artist, self.title).compile()
 
-        return [query]
+        return query
 
 
 class QueryMultipleAndArtists(QueryTogetherArtist):
@@ -121,6 +125,16 @@ class QueryMultipleAndSymbolArtists(QueryTogetherArtist):
         super().__init__(artist, title, SEP_AND_SYMBOL, SEP_AND)
 
 
+class QueryArtistBeginsWithThe(QueryArtistTitle):
+    def makes_sense(self) -> bool:
+        return self.artist.startswith(TOKEN_THE)
+
+    def compile(self) -> List[str]:
+        self.artist = self.artist.replace(TOKEN_THE, '', 1)
+
+        return super().compile()
+
+
 # first query always tried
 DEFAULT_QUERY = QueryArtistTitle
 # in reversed order, so queries will be tried bottom up
@@ -131,5 +145,6 @@ ADDITIONAL_QUERIES = [
     QuerySplitAndSymbolArtists,
     QueryMultipleAndSymbolArtists,
     QueryMultipleAndArtists,
-    QuerySplitMultipleArtists
+    QuerySplitMultipleArtists,
+    QueryArtistBeginsWithThe
 ]
