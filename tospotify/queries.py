@@ -78,8 +78,8 @@ class QueryMultipleArtist(Query):
         queries = []
         for artist in artists:
             artist = artist.strip()
-            query = QueryArtistTitle(artist, self.title).compile()[0]
-            queries.append(query)
+            query = QueryArtistMightBeginWithTheTitle(artist, self.title).compile()
+            queries = queries + query
 
         return queries
 
@@ -110,7 +110,7 @@ class QueryTogetherArtist(QueryMultipleArtist):
         if self.sep in artist:
             logging.warning('Encountered more than 2 occurrences of sep={} when detecting artist '
                             'as multiple artists. artist={}'.format(self.sep, self.artist))
-        query = QueryArtistTitle(artist, self.title).compile()
+        query = QueryArtistMightBeginWithTheTitle(artist, self.title).compile()
 
         return query
 
@@ -135,8 +135,18 @@ class QueryArtistBeginsWithThe(QueryArtistTitle):
         return super().compile()
 
 
+class QueryArtistMightBeginWithTheTitle(QueryArtistTitle):
+    def compile(self) -> List[str]:
+        queries = []
+        query_without_the = QueryArtistBeginsWithThe(self.artist, self.title)
+        if query_without_the.makes_sense():
+            queries = queries + query_without_the.compile()
+
+        return super().compile() + queries
+
+
 # first query always tried
-DEFAULT_QUERY = QueryArtistTitle
+DEFAULT_QUERY = QueryArtistMightBeginWithTheTitle
 # in reversed order, so queries will be tried bottom up
 ADDITIONAL_QUERIES = [
     QueryWildcard,
@@ -145,6 +155,5 @@ ADDITIONAL_QUERIES = [
     QuerySplitAndSymbolArtists,
     QueryMultipleAndSymbolArtists,
     QueryMultipleAndArtists,
-    QuerySplitMultipleArtists,
-    QueryArtistBeginsWithThe
+    QuerySplitMultipleArtists
 ]
