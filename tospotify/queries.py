@@ -79,6 +79,11 @@ class QueryMultipleArtist(Query):
         queries = []
         for artist in artists:
             artist = artist.strip()
+
+            if len(artist) == 0:
+                logging.warning('Encountered empty string after splitting artist on {}. Original artists={}'
+                                .format(self.sep, self.artist))
+
             query = QueryArtistMightBeginWithTheTitle(artist, self.title).compile()
             queries = queries + query
 
