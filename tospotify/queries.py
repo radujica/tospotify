@@ -48,16 +48,6 @@ class QueryArtistTitle(Query):
         return [query]
 
 
-class QueryTitle(Query):
-    def makes_sense(self) -> bool:
-        return True
-
-    def compile(self) -> List[str]:
-        query = Query._prepare_search_query_component(self.title, 'track')
-
-        return [query]
-
-
 class QueryWildcard(Query):
     def makes_sense(self) -> bool:
         return True
@@ -157,7 +147,6 @@ DEFAULT_QUERY = QueryArtistMightBeginWithTheTitle
 # in reversed order, so queries will be tried bottom up
 ADDITIONAL_QUERIES = [
     QueryWildcard,
-    QueryTitle,
     QuerySplitAndArtists,
     QuerySplitAndSymbolArtists,
     QueryMultipleAndSymbolArtists,

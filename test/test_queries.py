@@ -9,7 +9,6 @@ from tospotify.queries import (
     QueryMultipleAndSymbolArtists,
     QuerySplitAndArtists,
     QuerySplitAndSymbolArtists,
-    QueryTitle,
     QueryWildcard
 )
 
@@ -41,9 +40,6 @@ from tospotify.queries import (
     ('Sting & the Police & test', 'Every Breath You Take', QuerySplitAndSymbolArtists,
      ['artist:"Sting" AND track:"Every Breath You Take"', 'artist:"the Police" AND track:"Every Breath You Take"',
       'artist:"Police" AND track:"Every Breath You Take"', 'artist:"test" AND track:"Every Breath You Take"']),
-
-    ('Sting', 'Shape of my heart', QueryTitle,
-     ['track:"Shape of my heart"']),
 
     ('Sting', 'Shape of my heart', QueryWildcard,
      ['"Sting Shape of my heart"'])
