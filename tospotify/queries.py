@@ -100,6 +100,8 @@ class QuerySplitAndSymbolArtists(QueryMultipleArtist):
         super().__init__(artist, title, SEP_AND_SYMBOL)
 
 
+# TODO: perhaps do more recursively,
+#  e.g. for Sting & The Police also try Sting and Police, not only Sting and The Police
 class QueryTogetherArtist(QueryMultipleArtist):
     def __init__(self, artist, title, sep, to_sep):
         self.to_sep = to_sep
@@ -145,7 +147,7 @@ class QueryArtistMightBeginWithTheTitle(QueryArtistTitle):
         return super().compile() + queries
 
 
-# first query always tried
+# default query always tried
 DEFAULT_QUERY = QueryArtistMightBeginWithTheTitle
 # in reversed order, so queries will be tried bottom up
 ADDITIONAL_QUERIES = [
