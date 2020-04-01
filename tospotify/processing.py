@@ -3,6 +3,16 @@ import re
 from typing import Tuple
 
 
+def clean_title(title: str) -> str:
+    # cleans e.g. (feat. artist) or [acoustic]
+    cleaned_title = re.sub(r'\([^)]*\)|\[[^)]*\]', '', title)
+    # cleans all feat. or featuring
+    cleaned_title = re.sub(r'(\sfeat\..*)|(\sfeaturing.*)', '', cleaned_title)
+    cleaned_title = cleaned_title.strip()
+
+    return cleaned_title
+
+
 # TODO: handle utf-8 properly
 def clean_name(name: str) -> str:
     # keep only ascii and extra relevant characters: \s,&()[]

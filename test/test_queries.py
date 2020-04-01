@@ -2,6 +2,7 @@ import pytest
 
 from tospotify.queries import (
     QueryArtistTitle,
+    QueryArtistCleanedTitle,
     QueryArtistBeginsWithThe,
     QueryArtistMightBeginWithTheTitle,
     QuerySplitMultipleArtists,
@@ -9,13 +10,22 @@ from tospotify.queries import (
     QueryMultipleAndSymbolArtists,
     QuerySplitAndArtists,
     QuerySplitAndSymbolArtists,
-    QueryWildcard
+    QueryWildcard,
 )
 
 
 @pytest.mark.parametrize('artist,title,query_class,expected', [
     ('Sting', 'Shape of my heart', QueryArtistTitle,
      ['artist:"Sting" AND track:"Shape of my heart"']),
+
+    ('The Police', 'Every Breath You Take feat. Sting', QueryArtistCleanedTitle,
+     ['artist:"The Police" AND track:"Every Breath You Take"']),
+
+    ('The Police', 'Every Breath You Take (featuring Sting)', QueryArtistCleanedTitle,
+     ['artist:"The Police" AND track:"Every Breath You Take"']),
+
+    ('The Police', 'Every Breath You Take [Acoustic]', QueryArtistCleanedTitle,
+     ['artist:"The Police" AND track:"Every Breath You Take"']),
 
     ('the Police', 'Every Breath You Take', QueryArtistBeginsWithThe,
      ['artist:"Police" AND track:"Every Breath You Take"']),

@@ -1,6 +1,6 @@
 import pytest
 
-from tospotify.processing import clean_name, process_song_name
+from tospotify.processing import clean_name, process_song_name, clean_title
 
 
 @pytest.mark.parametrize('name,expected', [
@@ -22,3 +22,14 @@ def test_clean_name(name, expected):
 ])
 def test_process_song_name(song, expected):
     assert process_song_name(song) == expected
+
+
+@pytest.mark.parametrize('title,expected', [
+    ('every breath you take (feat. sting)', 'every breath you take'),
+    ('every breath you take featuring sting', 'every breath you take'),
+    ('every breath you take [acoustic]', 'every breath you take'),
+    ('every breath you take (feat. sting)[acoustic]', 'every breath you take'),
+    ('every breath you take [acoustic](feat. sting)', 'every breath you take')
+])
+def test_clean_title(title, expected):
+    assert clean_title(title) == expected

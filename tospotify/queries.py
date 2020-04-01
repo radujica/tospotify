@@ -2,6 +2,8 @@ import abc
 import logging
 from typing import List
 
+from .processing import clean_title
+
 # TODO: atm these presume the strings are cleaned and lowercase; improve
 SEP_SEMICOLON = ';'
 # added spaces to avoid and being inside a word, e.g. andrew
@@ -54,6 +56,13 @@ class QueryWildcard(Query):
 
     def compile(self) -> List[str]:
         return [Query._surround_with_quotes(self.artist + ' ' + self.title)]
+
+
+class QueryArtistCleanedTitle(QueryArtistTitle):
+    def compile(self) -> List[str]:
+        self.title = clean_title(self.title)
+
+        return super().compile()
 
 
 class QueryMultipleArtist(Query):
