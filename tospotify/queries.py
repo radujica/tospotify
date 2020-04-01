@@ -147,8 +147,8 @@ DEFAULT_QUERY = QueryArtistMightBeginWithTheTitle
 # in reversed order, so queries will be tried bottom up
 ADDITIONAL_QUERIES = [
     QueryWildcard,
-    QuerySplitAndArtists,
     QuerySplitAndSymbolArtists,
+    QuerySplitAndArtists,
     QueryMultipleAndSymbolArtists,
     QueryMultipleAndArtists,
     QuerySplitMultipleArtists
