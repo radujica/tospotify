@@ -50,6 +50,27 @@ class QueryArtistTitle(Query):
         return [query]
 
 
+class QueryArtistCleanedTitle(QueryArtistTitle):
+    # TODO: don't like cleaning twice
+    def makes_sense(self) -> bool:
+        return clean_title(self.title) != self.title
+
+    def compile(self) -> List[str]:
+        self.title = clean_title(self.title)
+
+        return super().compile()
+
+
+class QueryArtistTitleMightClean(QueryArtistTitle):
+    def compile(self) -> List[str]:
+        queries = []
+        query_title_cleaned = QueryArtistCleanedTitle(self.artist, self.title)
+        if query_title_cleaned.makes_sense():
+            queries = queries + query_title_cleaned.compile()
+
+        return super().compile() + queries
+
+
 class QueryWildcard(Query):
     def makes_sense(self) -> bool:
         return True
@@ -58,7 +79,11 @@ class QueryWildcard(Query):
         return [Query._surround_with_quotes(self.artist + ' ' + self.title)]
 
 
-class QueryArtistCleanedTitle(QueryArtistTitle):
+# TODO: need to refactor these classes. This is the same code as QueryArtistCleanedTitle
+class QueryWildcardCleanTitle(QueryWildcard):
+    def makes_sense(self) -> bool:
+        return clean_title(self.title) != self.title
+
     def compile(self) -> List[str]:
         self.title = clean_title(self.title)
 
@@ -131,7 +156,7 @@ class QueryMultipleAndSymbolArtists(QueryTogetherArtist):
         super().__init__(artist, title, SEP_AND_SYMBOL, SEP_AND)
 
 
-class QueryArtistBeginsWithThe(QueryArtistTitle):
+class QueryArtistBeginsWithThe(QueryArtistTitleMightClean):
     def makes_sense(self) -> bool:
         return self.artist.startswith(TOKEN_THE)
 
@@ -141,7 +166,7 @@ class QueryArtistBeginsWithThe(QueryArtistTitle):
         return super().compile()
 
 
-class QueryArtistMightBeginWithTheTitle(QueryArtistTitle):
+class QueryArtistMightBeginWithTheTitle(QueryArtistTitleMightClean):
     def compile(self) -> List[str]:
         queries = []
         query_without_the = QueryArtistBeginsWithThe(self.artist, self.title)
@@ -155,6 +180,7 @@ class QueryArtistMightBeginWithTheTitle(QueryArtistTitle):
 DEFAULT_QUERY = QueryArtistMightBeginWithTheTitle
 # in reversed order, so queries will be tried bottom up
 ADDITIONAL_QUERIES = [
+    QueryWildcardCleanTitle,
     QueryWildcard,
     QuerySplitAndSymbolArtists,
     QuerySplitAndArtists,
