@@ -7,7 +7,8 @@ from tospotify.processing import clean_name, process_song_name
     ('The Police', 'the police'),
     (' The  Police   ', 'the police'),
     ('St-ing; The, Police', 'sting; the, police'),
-    ('ßtïngé', 'tng')
+    ('ßtïngé', 'tng'),
+    ('é', '')
 ])
 def test_clean_name(name, expected):
     assert clean_name(name) == expected

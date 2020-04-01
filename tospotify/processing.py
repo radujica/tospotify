@@ -7,12 +7,15 @@ from typing import Tuple
 def clean_name(name: str) -> str:
     # keep only ascii and extra relevant characters: \s,&
     # Spotify seems to handle single quotes ' well, so can remove
-    name = re.sub(r'[^a-zA-Z0-9\s,;&]', '', name)
-    name = re.sub(r'\s+', ' ', name)
-    name = name.strip()
-    name = name.lower()
+    cleaned_name = re.sub(r'[^a-zA-Z0-9\s,;&]', '', name)
+    cleaned_name = re.sub(r'\s+', ' ', cleaned_name)
+    cleaned_name = cleaned_name.strip()
+    cleaned_name = cleaned_name.lower()
 
-    return name
+    if len(cleaned_name) == 0:
+        logging.warning('Encountered empty string after cleaning. Original string={}'.format(name))
+
+    return cleaned_name
 
 
 def process_song_name(song_name: str) -> Tuple[str, str]:
