@@ -1,12 +1,11 @@
 import logging
-from queue import Queue
 from typing import List, Optional
 
 import m3u8
 from spotipy import Spotify
 
+from .generator import QueryGenerator
 from .processing import process_song_name
-from .queries import ADDITIONAL_QUERIES, DEFAULT_QUERY
 
 
 def get_user_id(sp: Spotify) -> str:
@@ -34,30 +33,21 @@ def _run_query(sp: Spotify, query: str, market: str = None, iteration: int = 0) 
         return None
 
 
+# the code is optimized to limit the number of queries to Spotify as much as possible
 def _find_track(sp: Spotify, song: m3u8.Segment, market: str = None) -> Optional[str]:
     artist, title = process_song_name(song.title())
 
-    # using a queue to avoid computing all queries if not necessary
-    queue = Queue()
-    queue.put(DEFAULT_QUERY(artist, title).compile()[0])
-    query_class_pool = list(ADDITIONAL_QUERIES)
-    uri = None
+    query_generator = QueryGenerator(artist, title)
     iteration = 0
-    while uri is None and not queue.empty():
-        query = queue.get()
+    for query in query_generator.generate():
         uri = _run_query(sp, query, market=market, iteration=iteration)
 
-        if uri is None and queue.empty():
-            while queue.empty() and len(query_class_pool) > 0:
-                query = query_class_pool.pop()(artist, title)
-                if query.makes_sense():
-                    query_strings = query.compile()
-                    for q in query_strings:
-                        queue.put(q)
+        if uri is not None:
+            return uri
 
         iteration += 1
 
-    return uri
+    return None
 
 
 def add_tracks(sp: Spotify, playlist_id: str, tracks: List[str]) -> None:
