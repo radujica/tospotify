@@ -15,3 +15,5 @@ Need to setup some environment variables before running:
     to open.spotify.com, open develop console (F12) and go to network, click Your Library,
     now find the "playlists" request and there you'll see the full url with the user id
     i.e. https://api.spotify.com/v1/users/<id>/playlists
+    
+    pipenv lock -r > requirements.txt

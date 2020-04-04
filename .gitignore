@@ -8,6 +8,7 @@
 
 # python
 __pycache__
+*.egg-info
 
 # this sets up the relevant envvars before running search.py
 run.sh

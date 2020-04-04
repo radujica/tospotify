@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ace4db98846865dd2249936e45caf96cac6304dfe358754ab1a5305a86640263"
+            "sha256": "6b7c5ee111ea60426a6ec0fdaae9310405d04d2257ae048da41a0e9e46182ba7"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -165,6 +165,10 @@
                 "sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"
             ],
             "version": "==1.14.0"
+        },
+        "tospotify": {
+            "editable": true,
+            "path": "."
         },
         "wcwidth": {
             "hashes": [

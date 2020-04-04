@@ -7,16 +7,23 @@ from spotipy.util import prompt_for_user_token
 
 from tospotify import create_spotify_playlist, update_spotify_playlist
 
-parser = argparse.ArgumentParser(description='Create/update a Spotify playlist from a local m3u playlist')
-parser.add_argument('spotify_username', help='Spotify username where playlist should be updated', type=str)
-parser.add_argument('playlist_path', help='full path to the playlist', type=str)
-parser.add_argument('-v', '--verbose', help='print all the steps when searching for songs', action='store_true')
-parser.add_argument('--public', help='playlist is public, otherwise private', action='store_true')
-parser.add_argument('--playlist-id', help='do not create a new playlist, instead use the passed id to update', type=str)
-parsed_args = parser.parse_args()
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Create/update a Spotify playlist from a local m3u playlist')
+    parser.add_argument('spotify_username', help='Spotify username where playlist should be updated', type=str)
+    parser.add_argument('playlist_path', help='full path to the playlist', type=str)
+    parser.add_argument('-v', '--verbose', help='print all the steps when searching for songs', action='store_true')
+    parser.add_argument('--public', help='playlist is public, otherwise private', action='store_true')
+    parser.add_argument('--playlist-id', help='do not create a new playlist, '
+                                              'instead update the existing playlist with this id', type=str)
+    parsed_args = parser.parse_args()
+
+    return parsed_args
 
 
-def main(args):
+def main():
+    args = parse_args()
+
     logger = logging.getLogger()
     logger_level = logging.INFO if args.verbose else logging.WARNING
     logger.setLevel(logger_level)
@@ -43,6 +50,3 @@ def main(args):
         logging.info('Updating existing playlist with id={}'.format(playlist_id))
 
     update_spotify_playlist(sp, args.playlist_path, playlist_id)
-
-
-main(parsed_args)
