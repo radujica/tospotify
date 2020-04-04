@@ -1,19 +1,48 @@
 # Convert local playlist to Spotify playlist
 
+Currently works for m3u files; m3u8 support to come!
+
+## Usage
+
+    usage: tospotify [-h] [-v] [--public] [--playlist-id PLAYLIST_ID]
+                     spotify_username playlist_path
+    
+    Create/update a Spotify playlist from a local m3u playlist
+    
+    positional arguments:
+      spotify_username      Spotify username where playlist should be updated.
+                            Your email address should work just fine, or could
+                            find your user id through e.g. the developer console
+      playlist_path         full path to the playlist
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      -v, --verbose         print all the steps when searching for songs
+      --public              playlist is public, otherwise private
+      --playlist-id PLAYLIST_ID
+                            do not create a new playlist, instead update the
+                            existing playlist with this id
+                            
+### Example
+    tospotify --verbose "john.doe@gmail.com" "D:/playlist/name.m3u"
+
+
 ## Requirements
-Need to setup some environment variables before running:
+1. First need to enable Developer Dashboard and your 'app'.
+
+    - Go to https://developer.spotify.com/dashboard/login
+    - Create an app
+    - Get the client id and client secret from there for step 2
+    - Edit settings and whitelist a redirect uri; for default use `http://localhost:8888`
+    
+2. Setup some environment variables:
 
 ### Linux
 
     export SPOTIPY_CLIENT_ID="<paste-from-dev-dashboard>"
     export SPOTIPY_CLIENT_SECRET="<paste-from-dev-dashboard>"
-    # note that it needs to be whitelisted in the dev dashboard!
-    # for local can just use "http://localhost:8888"
     export SPOTIPY_REDIRECT_URI="<your-chosen-uri>"
     
-    for username you need to find your id; only way i could find was by logging in
-    to open.spotify.com, open develop console (F12) and go to network, click Your Library,
-    now find the "playlists" request and there you'll see the full url with the user id
-    i.e. https://api.spotify.com/v1/users/<id>/playlists
+### Windows
+Same as linux but use `set` instead of `export`
     
-    pipenv lock -r > requirements.txt

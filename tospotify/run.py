@@ -10,7 +10,10 @@ from tospotify import create_spotify_playlist, update_spotify_playlist
 
 def _parse_args():
     parser = argparse.ArgumentParser(description='Create/update a Spotify playlist from a local m3u playlist')
-    parser.add_argument('spotify_username', help='Spotify username where playlist should be updated', type=str)
+    parser.add_argument('spotify_username',
+                        help='Spotify username where playlist should be updated. '
+                             'Your email address should work just fine, or could find your user id '
+                             'through e.g. the developer console', type=str)
     parser.add_argument('playlist_path', help='full path to the playlist', type=str)
     parser.add_argument('-v', '--verbose', help='print all the steps when searching for songs', action='store_true')
     parser.add_argument('--public', help='playlist is public, otherwise private', action='store_true')
@@ -28,9 +31,6 @@ def main():
     logger = logging.getLogger()
     logger_level = logging.INFO if args.verbose else logging.WARNING
     logger.setLevel(logger_level)
-
-    # required by Spotipy for authorization code flow
-    os.environ['SPOTIPY_REDIRECT_URI'] = 'http://localhost:8888'
 
     username = args.spotify_username
     scope = 'playlist-modify-public' if args.public else 'playlist-modify-private'
