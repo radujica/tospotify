@@ -4,9 +4,18 @@ from typing import Tuple
 
 
 def clean_title(title: str) -> str:
-    # cleans e.g. (feat. artist) or [acoustic]
+    """ Clean a song title:
+
+    - remove brackets and text within ()[] brackets, e.g. [acoustic]
+    - remove text (and including) feat. or featuring
+    - strip the remaining whitespaces
+
+    :param title: song title to clean
+    :type title: str
+    :return: cleaned song title
+    :rtype: str
+    """
     cleaned_title = re.sub(r'\([^)]*\)|\[[^)]*\]', '', title)
-    # cleans all feat. or featuring
     cleaned_title = re.sub(r'(\sfeat\..*)|(\sfeaturing.*)', '', cleaned_title)
     cleaned_title = cleaned_title.strip()
 
@@ -15,27 +24,44 @@ def clean_title(title: str) -> str:
 
 # TODO: handle utf-8 properly
 def clean_name(name: str) -> str:
-    # keep only ascii and extra relevant characters: \s,&()[]
-    # Spotify seems to handle single quotes ' well, so can remove
+    """ Clean either artist or title:
+
+    - keep only ascii and some relevant characters: \\,&()[]
+    - note that single quotes are also removed since Spotify seems to handle those well
+    - strip and lowercase
+
+    :param name: artist or song title to clean
+    :type name: str
+    :return: cleaned name
+    :rtype: str
+    """
     cleaned_name = re.sub(r'[^a-zA-Z0-9\s,;&()\[\]]', '', name)
     cleaned_name = re.sub(r'\s+', ' ', cleaned_name)
     cleaned_name = cleaned_name.strip()
     cleaned_name = cleaned_name.lower()
 
     if len(cleaned_name) == 0:
-        logging.warning('Encountered empty string after cleaning. Original string={}'.format(name))
+        logging.warning('Encountered empty string after cleaning. Original string={}', name)
 
     return cleaned_name
 
 
 def process_song_name(song_name: str) -> Tuple[str, str]:
+    """ Splits m3u line of artist - title and cleans using clean_name
+
+    :param song_name:
+    :type song_name: str
+    :return: tuple of artist and title
+    :rtype: (str, str)
+    """
     song_split = song_name.split('-')
 
     if len(song_split) == 1:
         raise ProcessingException('Could not split song into artist and title! song={}'.format(song_name))
-    elif len(song_split) != 2:
+
+    if len(song_split) != 2:
         logging.warning('Encountered more than 2 chunks when splitting song into artist and title. '
-                        'song={}'.format(song_name))
+                        'song={}', song_name)
 
     artist = clean_name(song_split[0])
     title = clean_name(song_split[1])
@@ -44,4 +70,4 @@ def process_song_name(song_name: str) -> Tuple[str, str]:
 
 
 class ProcessingException(Exception):
-    pass
+    """ Custom exception for errors in processing the data """

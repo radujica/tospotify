@@ -8,7 +8,7 @@ from spotipy.util import prompt_for_user_token
 from tospotify import create_spotify_playlist, update_spotify_playlist
 
 
-def parse_args():
+def _parse_args():
     parser = argparse.ArgumentParser(description='Create/update a Spotify playlist from a local m3u playlist')
     parser.add_argument('spotify_username', help='Spotify username where playlist should be updated', type=str)
     parser.add_argument('playlist_path', help='full path to the playlist', type=str)
@@ -22,7 +22,8 @@ def parse_args():
 
 
 def main():
-    args = parse_args()
+    """ Main entry point to the script """
+    args = _parse_args()
 
     logger = logging.getLogger()
     logger_level = logging.INFO if args.verbose else logging.WARNING
@@ -38,15 +39,15 @@ def main():
     if token is None:
         logging.error('Could not acquire token!')
 
-    sp = Spotify(auth=token)
+    spot = Spotify(auth=token)
 
     if args.playlist_id is None:
         _, filename = os.path.split(args.playlist_path)
         playlist_name = str(filename.split('.')[0])
-        playlist_id = create_spotify_playlist(sp, playlist_name)
-        logging.info('Created playlist with name={} at id={}'.format(playlist_name, playlist_id))
+        playlist_id = create_spotify_playlist(spot, playlist_name)
+        logging.info('Created playlist with name={} at id={}', playlist_name, playlist_id)
     else:
         playlist_id = args.playlist_id
-        logging.info('Updating existing playlist with id={}'.format(playlist_id))
+        logging.info('Updating existing playlist with id={}', playlist_id)
 
-    update_spotify_playlist(sp, args.playlist_path, playlist_id)
+    update_spotify_playlist(spot, args.playlist_path, playlist_id)

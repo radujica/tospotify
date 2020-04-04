@@ -1,4 +1,4 @@
-from typing import Tuple, Type
+from typing import Tuple, Type, Generator
 
 from .types.artists import (
     Artist,
@@ -18,7 +18,8 @@ TITLE_POOL = (Title, CleanedTitle)
 QUERY_POOL = (QueryArtistTitle, QueryWildcard)
 
 
-class QueryGenerator(object):
+class QueryGenerator:
+    """ Generator of relevant queries for a artist-title pair """
     def __init__(
             self,
             artist: str,
@@ -33,13 +34,18 @@ class QueryGenerator(object):
         self.artists = artists
         self.titles = titles
 
-    def generate(self) -> str:
-        for q in self.queries:
-            for a in self.artists:
-                artist = a(self.artist)
-                for t in self.titles:
-                    title = t(self.title)
-                    query = q(artist, title)
+    def generate(self) -> Generator[str, None, None]:
+        """ Return a query at a time if it would make sense to execute
+
+        :return: query as a string
+        :rtype: str
+        """
+        for q_class in self.queries:
+            for a_class in self.artists:
+                artist = a_class(self.artist)
+                for t_class in self.titles:
+                    title = t_class(self.title)
+                    query = q_class(artist, title)
                     if query.makes_sense():
                         for query2 in query.compile():
                             yield query2
