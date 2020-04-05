@@ -2,6 +2,9 @@
 
 Currently pipenv focused; can adapt to your dev env.
 
+    # activate virtual env where necessary
+    pipenv shell
+    
     # install the dev requirements
     pipenv install --dev
     # could also use the requirements; this is how to regenerate
@@ -11,10 +14,19 @@ Currently pipenv focused; can adapt to your dev env.
     pipenv lock --dev -r > requirements.txt
     
     # run tests
-    pipenv run pytest test
+    pytest test
     
     # run linter
-    pipenv run pylint tospotify
+    pylint tospotify
     # regenerate default linter rcfile
-    pipenv run pylint --generate-rcfile > .pylintrc
+    pylint --generate-rcfile > .pylintrc
+    
+    # build for publish
+    python setup.py sdist
+    # clean
+    rm -rf dist tospotify.egg-info
+    # check before publish
+    twine check <dist/path>
+    # publish
+    twine upload -r pypi <dist/path>
     

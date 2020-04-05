@@ -5,12 +5,13 @@ verify_ssl = true
 
 [dev-packages]
 pytest = "*"
-tospotify = {editable = true,path = "."}
 pylint = "*"
+twine = "*"
+tospotify = {editable = true,path = "."}
 
 [packages]
 spotipy = "*"
 m3u8 = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3"
