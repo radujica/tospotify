@@ -6,7 +6,7 @@ SEP_SEMICOLON = ';'
 # added spaces to avoid and being inside a word, e.g. andrew
 SEP_AND = ' and '
 SEP_AND_SYMBOL = ' & '
-TOKEN_THE = 'the '
+TOKEN_THE = 'the '  # nosec
 
 
 class Artist:
