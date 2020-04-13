@@ -17,9 +17,11 @@ Currently pipenv focused; can adapt to your dev env.
     pytest test
     
     # run linter
-    pylint tospotify
-    # regenerate default linter rcfile
-    pylint --generate-rcfile > .pylintrc
+    pylint --rcfile=setup.cfg tospotify
+    # run other linter
+    flake8 tospotify
+    # run bandit (for security checks)
+    bandit -r tospotify
     
     # build for publish
     python setup.py sdist

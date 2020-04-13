@@ -22,7 +22,6 @@ def clean_title(title: str) -> str:
     return cleaned_title
 
 
-# TODO: handle utf-8 properly
 def clean_name(name: str) -> str:
     """ Clean either artist or title:
 
