@@ -5,7 +5,7 @@ import os
 from spotipy import Spotify
 from spotipy.util import prompt_for_user_token
 
-from tospotify import create_spotify_playlist, update_spotify_playlist
+from .search import create_spotify_playlist, update_spotify_playlist
 
 
 def _parse_args():
