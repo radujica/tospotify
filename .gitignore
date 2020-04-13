@@ -8,6 +8,8 @@
 
 # pytest
 .pytest_cache
+.coverage
+coverage.xml
 
 # python
 __pycache__

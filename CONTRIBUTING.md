@@ -14,7 +14,7 @@ Currently pipenv focused; can adapt to your dev env.
     pipenv lock --dev -r > requirements.txt
     
     # run tests
-    pytest test
+    pytest
     
     # run linter
     pylint --rcfile=setup.cfg tospotify

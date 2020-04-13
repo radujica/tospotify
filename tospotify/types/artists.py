@@ -67,7 +67,7 @@ class MultipleTogetherArtist(MultipleArtist):
         artist = self.artist.replace(self.sep, self.to_sep, 1)
         if self.sep in artist:
             logging.warning('Encountered more than 2 occurrences of sep={} when detecting artist '
-                            'as multiple artists. artist={}', self.sep, self.artist)
+                            'as multiple artists. artist={}'.format(self.sep, self.artist))
 
         yield artist
 
@@ -94,8 +94,8 @@ class MultipleSplitArtist(MultipleArtist):
             artist = artist.strip()
 
             if len(artist) == 0:
-                logging.warning('Encountered empty string after splitting artist on {}. Original artists={}',
-                                self.sep, self.artist)
+                logging.warning('Encountered empty string after splitting artist on {}. Original artists={}'
+                                .format(self.sep, self.artist))
 
             yield artist
 

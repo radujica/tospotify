@@ -10,6 +10,8 @@ twine = "*"
 tospotify = {editable = true,path = "."}
 flake8 = "*"
 bandit = "*"
+coverage = "*"
+pytest-cov = "*"
 
 [packages]
 spotipy = "*"

@@ -45,9 +45,9 @@ def main():
         _, filename = os.path.split(args.playlist_path)
         playlist_name = str(filename.split('.')[0])
         playlist_id = create_spotify_playlist(spot, playlist_name)
-        logging.info('Created playlist with name={} at id={}', playlist_name, playlist_id)
+        logging.info('Created playlist with name={} at id={}'.format(playlist_name, playlist_id))
     else:
         playlist_id = args.playlist_id
-        logging.info('Updating existing playlist with id={}', playlist_id)
+        logging.info('Updating existing playlist with id={}'.format(playlist_id))
 
     update_spotify_playlist(spot, args.playlist_path, playlist_id)
