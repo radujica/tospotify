@@ -27,8 +27,8 @@ def _parse_args() -> None:
 def _parse_path(path: str) -> str:
     if path.startswith('/'):
         return path
-    else:
-        return os.path.join(os.getcwd(), *path.split(os.sep))
+
+    return os.path.join(os.getcwd(), *path.split(os.sep))
 
 
 def main() -> None:
