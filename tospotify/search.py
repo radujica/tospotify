@@ -97,7 +97,7 @@ def update_spotify_playlist(
 
     :param spot: spotipy Spotify object to use its REST API
     :type spot: Spotify
-    :param playlist_path: full path of the playlist
+    :param playlist_path: absolute path of the playlist
     :type playlist_path: str
     :param playlist_id: Spotify id for the playlist to update
     :type playlist_id: str
