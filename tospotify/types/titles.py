@@ -1,4 +1,6 @@
-from ..processing import clean_title
+import logging
+
+from ..processing import clean_title, MIN_LENGTH_NAME
 
 
 class Title:
@@ -32,5 +34,8 @@ class CleanedTitle(Title):
 
     def process(self) -> str:
         title = clean_title(self.title)
+
+        if len(title) < MIN_LENGTH_NAME:
+            logging.warning('Encountered title after cleaning with too short name={}'.format(title))
 
         return title

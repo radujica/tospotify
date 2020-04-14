@@ -5,7 +5,7 @@ import m3u8
 from spotipy import Spotify
 
 from .generator import QueryGenerator
-from .processing import process_song_name
+from .processing import process_song_name, MIN_LENGTH_NAME
 
 
 def get_user_id(spot: Spotify) -> str:
@@ -55,6 +55,11 @@ def _run_query(spot: Spotify, query: str, market: str = None, iteration: int = 0
 # the code is optimized to limit the number of queries to Spotify as much as possible
 def _find_track(spot: Spotify, song: m3u8.Segment, market: str = None) -> Optional[str]:
     artist, title = process_song_name(song.title())
+
+    if len(artist) < MIN_LENGTH_NAME:
+        logging.warning('Encountered artist after processing with short name={}'.format(artist))
+    if len(title) < MIN_LENGTH_NAME:
+        logging.warning('Encountered title after processing with short name={}'.format(title))
 
     query_generator = QueryGenerator(artist, title)
     iteration = 0

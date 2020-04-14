@@ -3,6 +3,9 @@ import re
 from typing import Tuple
 
 
+MIN_LENGTH_NAME = 3
+
+
 def clean_title(title: str) -> str:
     """ Clean a song title:
 
