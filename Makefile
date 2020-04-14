@@ -19,5 +19,6 @@ build:
 
 clean:
 	rm -rf .pytest_cache .coverage coverage.xml dist tospotify.egg-info build
+	find . -name __pycache__ -type d -prune -exec rm -rf {} \;
 
 .PHONY: test
