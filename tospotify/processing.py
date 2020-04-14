@@ -10,7 +10,7 @@ def clean_title(title: str) -> str:
     """ Clean a song title:
 
     - remove brackets and text within ()[] brackets, e.g. [acoustic]
-    - remove text (and including) feat. or featuring
+    - remove text (and including) feat. or featuring or ft.
     - strip the remaining whitespaces
 
     :param title: song title to clean
@@ -19,7 +19,7 @@ def clean_title(title: str) -> str:
     :rtype: str
     """
     cleaned_title = re.sub(r'\([^)]*\)|\[[^)]*\]', '', title)
-    cleaned_title = re.sub(r'(\sfeat\..*)|(\sfeaturing.*)', '', cleaned_title)
+    cleaned_title = re.sub(r'(\sfeat\..*)|(\sfeaturing.*)|(\sft\..*)', '', cleaned_title)
     cleaned_title = cleaned_title.strip()
 
     return cleaned_title
