@@ -11,17 +11,7 @@ Currently pipenv focused; can adapt to your dev env.
     pip freeze > requirements.txt
     # above includes the dev, otherwise through pipenv can make them
     pipenv lock -r > requirements.txt
-    pipenv lock --dev -r > requirements.txt
-    
-    # run tests
-    pytest
-    
-    # run linter
-    pylint --rcfile=setup.cfg tospotify
-    # run other linter
-    flake8 tospotify
-    # run bandit (for security checks)
-    bandit -r tospotify
+    pipenv lock --dev -r > requirements-dev.txt
     
     # build for publish
     python setup.py sdist
