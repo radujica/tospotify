@@ -1,5 +1,7 @@
 # Convert local playlist to Spotify playlist
 
+[![PyPI version](https://badge.fury.io/py/tospotify.svg)](https://badge.fury.io/py/tospotify)
+
 Currently works for m3u files; m3u8 support to come!
 
 ## Usage
