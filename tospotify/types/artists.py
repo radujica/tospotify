@@ -1,6 +1,8 @@
 import logging
 from typing import Generator
 
+from ..processing import MIN_LENGTH_NAME
+
 
 SEP_SEMICOLON = ';'
 # added spaces to avoid and being inside a word, e.g. andrew
@@ -41,6 +43,10 @@ class ArtistBeginsWithThe(Artist):
 
     def process(self) -> Generator[str, None, None]:
         artist = self.artist[len(TOKEN_THE):]
+
+        if len(artist) < MIN_LENGTH_NAME:
+            logging.warning('Encountered artist after removing "the" with '
+                            'too short name={}'.format(artist))
 
         yield artist
 
@@ -93,9 +99,9 @@ class MultipleSplitArtist(MultipleArtist):
         for artist in artists:
             artist = artist.strip()
 
-            if len(artist) == 0:
-                logging.warning('Encountered empty string after splitting artist on {}. Original artists={}'
-                                .format(self.sep, self.artist))
+            if len(artist) < MIN_LENGTH_NAME:
+                logging.warning('Encountered artist after splitting on={} '
+                                'with too short name={}'.format(self.sep, artist))
 
             yield artist
 
