@@ -22,7 +22,6 @@ def clean_title(title: str) -> str:
     return cleaned_title
 
 
-# TODO: handle utf-8 properly
 def clean_name(name: str) -> str:
     """ Clean either artist or title:
 
@@ -41,7 +40,7 @@ def clean_name(name: str) -> str:
     cleaned_name = cleaned_name.lower()
 
     if len(cleaned_name) == 0:
-        logging.warning('Encountered empty string after cleaning. Original string={}', name)
+        logging.warning('Encountered empty string after cleaning. Original string={}'.format(name))
 
     return cleaned_name
 
@@ -61,7 +60,7 @@ def process_song_name(song_name: str) -> Tuple[str, str]:
 
     if len(song_split) != 2:
         logging.warning('Encountered more than 2 chunks when splitting song into artist and title. '
-                        'song={}', song_name)
+                        'song={}'.format(song_name))
 
     artist = clean_name(song_split[0])
     title = clean_name(song_split[1])

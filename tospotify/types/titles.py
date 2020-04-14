@@ -6,7 +6,7 @@ class Title:
     def __init__(self, title: str) -> None:
         self.title = title
 
-    def makes_sense(self) -> bool:
+    def makes_sense(self) -> bool:  # pylint: disable=no-self-use
         """ Checks whether it makes sense to compile a query given this song title
 
         :return: True if a query would make sense, False otherwise

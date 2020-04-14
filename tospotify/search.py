@@ -45,9 +45,9 @@ def _run_query(spot: Spotify, query: str, market: str = None, iteration: int = 0
     uri = None
     if len(results) > 0:
         uri = results[0]['uri']
-        logging.info('{}Found track with query={} as uri={}', prepend_pretty_print, query, uri)
+        logging.info('{}Found track with query={} as uri={}'.format(prepend_pretty_print, query, uri))
     else:
-        logging.info('{}Could not find track with query={}', prepend_pretty_print, query)
+        logging.info('{}Could not find track with query={}'.format(prepend_pretty_print, query))
 
     return uri
 
@@ -113,7 +113,7 @@ def update_spotify_playlist(
         if track_uri:
             tracks.append(track_uri)
         else:
-            logging.warning('Could not find any track for song with artist - title={}', song.title)
+            logging.warning('Could not find any track for song with artist - title={}'.format(song.title))
 
     if len(tracks) == 0:
         logging.error('Could not find any tracks!')

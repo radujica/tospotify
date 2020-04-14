@@ -3,8 +3,13 @@
 .idea
 *.iml
 
+# vscode
+.vscode
+
 # pytest
 .pytest_cache
+.coverage
+coverage.xml
 
 # python
 __pycache__
