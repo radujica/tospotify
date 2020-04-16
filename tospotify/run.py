@@ -8,7 +8,7 @@ from spotipy.util import prompt_for_user_token
 from .search import create_spotify_playlist, update_spotify_playlist
 
 
-def _parse_args() -> None:
+def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Create/update a Spotify playlist from a local m3u playlist')
     parser.add_argument('spotify_username',
                         help='Spotify username where playlist should be updated. '

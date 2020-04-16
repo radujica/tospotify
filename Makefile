@@ -14,8 +14,14 @@ lint:
 	@echo "Running Bandit against source files..."
 	@bandit -r --ini setup.cfg
 
-build:
-	@python setup.py sdist
+build: clean
+	@python setup.py sdist bdist_wheel
+
+publish: clean build
+	@echo "Checking build..."
+	@twine check dist/*
+	@echo "Publishing to pypi..."
+	@twine upload -r pypi dist/*
 
 clean:
 	rm -rf .pytest_cache .coverage coverage.xml dist tospotify.egg-info build
