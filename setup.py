@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 # TODO: add long_description ~ pypi readme
 setup(
@@ -9,7 +9,7 @@ setup(
     author='Radu Jica',
     author_email='radu.jica+code@gmail.com',
     license='GPL-3.0',
-    packages=find_packages(),
+    packages=['tospotify', 'tospotify.types'],
     include_package_data=True,
     zip_safe=True,
     install_requires=['spotipy', 'm3u8'],

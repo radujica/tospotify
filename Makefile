@@ -15,7 +15,7 @@ lint:
 	@bandit -r --ini setup.cfg
 
 build:
-	@python setup.py sdist
+	@python setup.py sdist bdist_wheel
 
 clean:
 	rm -rf .pytest_cache .coverage coverage.xml dist tospotify.egg-info build

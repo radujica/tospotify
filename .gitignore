@@ -15,6 +15,7 @@ coverage.xml
 __pycache__
 *.egg-info
 dist
+build
 
 # this sets up the relevant envvars before running search.py
 run.sh
