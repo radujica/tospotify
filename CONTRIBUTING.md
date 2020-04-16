@@ -14,5 +14,6 @@ Check out the Makefile for the common commands.
     pipenv lock -r > requirements.txt
     pipenv lock --dev -r > requirements-dev.txt
     
-Publishing to pypi is handled through github releases and action.
+Publishing to pypi is handled through github releases and action, 
+though version in setup.py needs to be manually bumped.
     
