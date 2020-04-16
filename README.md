@@ -27,7 +27,15 @@ Currently works for m3u files; m3u8 support to come!
                             existing playlist with this id
                             
 ### Example
-    tospotify --verbose "john.doe@gmail.com" "D:/playlist/name.m3u"
+* Linux/MacOS
+
+        tospotify --verbose "john.doe@gmail.com" "D:/playlist/name.m3u"
+        
+* Windows*
+
+        python -m tospotify "john.doe@gmail.com" "D:/playlist/name.m3u"
+        
+\*`entry_points` does not seem to simply work on Windows 
 
 
 ## Requirements
