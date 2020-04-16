@@ -1,6 +1,7 @@
 # Setup
 
 Currently pipenv focused; can adapt to your dev env.
+Check out the Makefile for the common commands.
 
     # activate virtual env where necessary
     pipenv shell
@@ -13,8 +14,5 @@ Currently pipenv focused; can adapt to your dev env.
     pipenv lock -r > requirements.txt
     pipenv lock --dev -r > requirements-dev.txt
     
-    # check before publish
-    twine check <dist/path>
-    # publish
-    twine upload -r pypi dist/*
+Publishing to pypi is handled through github releases and action.
     
