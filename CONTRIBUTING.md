@@ -13,12 +13,8 @@ Currently pipenv focused; can adapt to your dev env.
     pipenv lock -r > requirements.txt
     pipenv lock --dev -r > requirements-dev.txt
     
-    # build for publish
-    python setup.py sdist
-    # clean
-    rm -rf dist tospotify.egg-info
     # check before publish
     twine check <dist/path>
     # publish
-    twine upload -r pypi <dist/path>
+    twine upload -r pypi dist/*
     
