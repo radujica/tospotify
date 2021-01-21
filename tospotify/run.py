@@ -1,11 +1,30 @@
 import argparse
 import logging
 import os
+from typing import Optional
 
 from spotipy import Spotify
 from spotipy.util import prompt_for_user_token
 
 from .search import create_spotify_playlist, update_spotify_playlist
+
+
+def _m3u_file(path: str) -> Optional[str]:
+    if not isinstance(path, str):
+        raise argparse.ArgumentTypeError('Path must be a string. Encountered type={}'.format(str(type(path))))
+
+    splits = path.rsplit('.', 1)
+    if len(splits) == 1:
+        raise argparse.ArgumentTypeError('Could not determine file extension')
+
+    filename, extension = splits[0], splits[1]
+    if len(filename) == 0:
+        raise argparse.ArgumentTypeError('Filename without extension cannot be empty')
+
+    if extension == 'm3u':
+        return path
+
+    raise argparse.ArgumentTypeError('Only m3u files are supported. Encountered={}'.format(extension))
 
 
 def _parse_args() -> argparse.Namespace:
@@ -14,7 +33,7 @@ def _parse_args() -> argparse.Namespace:
                         help='Spotify username where playlist should be updated. '
                              'Your email address should work just fine, or could find your user id '
                              'through e.g. the developer console', type=str)
-    parser.add_argument('playlist_path', help='full path to the playlist', type=str)
+    parser.add_argument('playlist_path', help='full path to the playlist', type=_m3u_file)
     parser.add_argument('--verbose', help='print all the steps when searching for songs', action='store_true')
     parser.add_argument('--public', help='playlist is public, otherwise private', action='store_true')
     parser.add_argument('--playlist-id', help='do not create a new playlist, '
