@@ -6,6 +6,7 @@ from spotipy import Spotify
 
 from .generator import QueryGenerator
 from .processing import process_song_name, MIN_LENGTH_NAME
+from .parser import parse_songs
 
 
 def get_user_id(spot: Spotify) -> str:
@@ -110,17 +111,19 @@ def update_spotify_playlist(
     :type market: str
     :return:
     """
-    playlist = m3u8.load(playlist_path)
+    songs = parse_songs(playlist_path)
 
-    tracks = []
-    for song in playlist.segments:
-        track_uri = _find_track(spot, song.title, market)
-        if track_uri:
-            tracks.append(track_uri)
+    if len(songs) > 0:
+        tracks = []
+        for song in songs:
+            track_uri = _find_track(spot, song.title, market)
+            if track_uri:
+                tracks.append(track_uri)
+            else:
+                logging.warning('Could not find any track for song with artist - title={}'.format(song.title))
+        if len(tracks) == 0:
+            logging.error('Could not find any tracks on Spotify!')
         else:
-            logging.warning('Could not find any track for song with artist - title={}'.format(song.title))
-
-    if len(tracks) == 0:
-        logging.error('Could not find any tracks!')
+            add_tracks(spot, playlist_id, tracks)
     else:
-        add_tracks(spot, playlist_id, tracks)
+        logging.info('Did not try searching on Spotify since no songs were found in the file.')
