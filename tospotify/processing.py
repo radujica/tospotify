@@ -49,12 +49,14 @@ def clean_name(name: str) -> str:
 
 
 def process_song_name(song_name: str) -> Tuple[str, str]:
-    """ Splits m3u line of artist - title and cleans using clean_name
+    """ Splits m3u line of artist - title and cleans using clean_name.
+    Note that the Extended M3U8 format requires this format, i.e. artist - title based on file tags.
 
     :param song_name:
     :type song_name: str
     :return: tuple of artist and title
     :rtype: (str, str)
+    :raises ProcessingException: if a song does not obey the Extended M3U8 formatting of "artist - title"
     """
     song_split = song_name.split('-')
 

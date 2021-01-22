@@ -21,7 +21,7 @@ def _m3u_file(path: str) -> Optional[str]:
     if len(filename) == 0:
         raise argparse.ArgumentTypeError('Filename without extension cannot be empty')
 
-    if extension == 'm3u':
+    if extension in {'m3u', 'm3u8'}:
         return path
 
     raise argparse.ArgumentTypeError('Only m3u files are supported. Encountered={}'.format(extension))

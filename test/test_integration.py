@@ -23,7 +23,8 @@ class MockArgs:
 @pytest.mark.parametrize('playlist', [
     os.path.join('test', 'data', 'valid_playlist.m3u'),
     os.path.join('test', 'data', 'empty_playlist.m3u'),
-    os.path.join('test', 'data', 'empty_playlist.m3u')
+    os.path.join('test', 'data', 'empty_playlist.m3u'),
+    os.path.join('test', 'data', 'valid_utf8.m3u8')
 ])
 def test_integration(mock_function, playlist):
     mock_function.return_value = MockArgs(playlist_path=playlist, playlist_id=1)

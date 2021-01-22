@@ -18,15 +18,15 @@ def test__parse_path(path, expected):
 
 @pytest.mark.parametrize('playlist_path', [
     'path/to/file.m3u',
-    'file.m3u'
+    'file.m3u',
+    'path/to/file.m3u8',
+    'file.m3u8'
 ])
 def test__m3u_extension(playlist_path):
     _m3u_file(playlist_path)
 
 
 @pytest.mark.parametrize('playlist_path', [
-    'path/to/file.m3u8',
-    'file.m3u8',
     'path/file.mp3',
     '.m3u',
     'file'
