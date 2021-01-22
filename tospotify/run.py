@@ -50,6 +50,13 @@ def _parse_path(path: str) -> str:
     return os.path.join(os.getcwd(), *path.split(os.sep))
 
 
+def _extract_playlist_name(playlist_path: str) -> str:
+    _, filename = os.path.split(playlist_path)
+    playlist_name = str(filename.split('.')[0])
+
+    return playlist_name
+
+
 def main() -> None:
     """ Main entry point to the script """
     args = _parse_args()
@@ -69,8 +76,7 @@ def main() -> None:
     spot = Spotify(auth=token)
 
     if args.playlist_id is None:
-        _, filename = os.path.split(playlist_path)
-        playlist_name = str(filename.split('.')[0])
+        playlist_name = _extract_playlist_name(playlist_path)
         playlist_id = create_spotify_playlist(spot, playlist_name)
         logging.info('Created playlist with name={} at id={}'.format(playlist_name, playlist_id))
     else:
