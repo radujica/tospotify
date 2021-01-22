@@ -5,6 +5,7 @@ import m3u8
 from spotipy import Spotify
 
 from .generator import QueryGenerator
+from .parser import parse_songs, convert_utf8
 from .processing import process_song_name, MIN_LENGTH_NAME
 
 
@@ -96,6 +97,7 @@ def update_spotify_playlist(
         spot: Spotify,
         playlist_path: str,
         playlist_id: str,
+        to_convert: bool,
         market: str = None
 ) -> None:
     """ Read songs from an m3u file and update a Spotify playlist with these songs
@@ -106,21 +108,28 @@ def update_spotify_playlist(
     :type playlist_path: str
     :param playlist_id: Spotify id for the playlist to update
     :type playlist_id: str
+    :param to_convert: whether to convert file to utf-8
+    :type to_convert: bool
     :param market: market to look for songs in; see Spotipy docs
     :type market: str
     :return:
     """
-    playlist = m3u8.load(playlist_path)
+    if to_convert:
+        playlist_path = convert_utf8(playlist_path)
 
-    tracks = []
-    for song in playlist.segments:
-        track_uri = _find_track(spot, song.title, market)
-        if track_uri:
-            tracks.append(track_uri)
+    songs = parse_songs(playlist_path)
+
+    if len(songs) > 0:
+        tracks = []
+        for song in songs:
+            track_uri = _find_track(spot, song.title, market)
+            if track_uri:
+                tracks.append(track_uri)
+            else:
+                logging.warning('Could not find any track for song with artist - title={}'.format(song.title))
+        if len(tracks) == 0:
+            logging.error('Could not find any tracks on Spotify!')
         else:
-            logging.warning('Could not find any track for song with artist - title={}'.format(song.title))
-
-    if len(tracks) == 0:
-        logging.error('Could not find any tracks!')
+            add_tracks(spot, playlist_id, tracks)
     else:
-        add_tracks(spot, playlist_id, tracks)
+        logging.info('Did not try searching on Spotify since no songs were found in the file.')

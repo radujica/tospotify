@@ -28,8 +28,8 @@ def clean_title(title: str) -> str:
 def clean_name(name: str) -> str:
     """ Clean either artist or title:
 
-    - keep only ascii and some relevant characters: \\,&()[]
-    - note that single quotes are also removed since Spotify seems to handle those well
+    - removes these characters: .{}
+    - removes extra spaces
     - strip and lowercase
 
     :param name: artist or song title to clean
@@ -37,7 +37,7 @@ def clean_name(name: str) -> str:
     :return: cleaned name
     :rtype: str
     """
-    cleaned_name = re.sub(r'[^a-zA-Z0-9\s,;&()\[\]]', '', name)
+    cleaned_name = re.sub(r'[.{\}]', '', name)
     cleaned_name = re.sub(r'\s+', ' ', cleaned_name)
     cleaned_name = cleaned_name.strip()
     cleaned_name = cleaned_name.lower()
@@ -49,12 +49,16 @@ def clean_name(name: str) -> str:
 
 
 def process_song_name(song_name: str) -> Tuple[str, str]:
-    """ Splits m3u line of artist - title and cleans using clean_name
+    """ Splits m3u line of artist - title and cleans using clean_name.
+    Note that the Extended M3U8 format requires this format, i.e. artist - title based on file tags.
+
+    !Since '-' delimits the artist from the song, this character should not be seen inside the artist or title!
 
     :param song_name:
     :type song_name: str
     :return: tuple of artist and title
     :rtype: (str, str)
+    :raises ProcessingException: if a song does not obey the Extended M3U8 formatting of "artist - title"
     """
     song_split = song_name.split('-')
 
