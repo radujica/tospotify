@@ -5,8 +5,8 @@ import m3u8
 from spotipy import Spotify
 
 from .generator import QueryGenerator
-from .processing import process_song_name, MIN_LENGTH_NAME
 from .parser import parse_songs
+from .processing import process_song_name, MIN_LENGTH_NAME
 
 
 def get_user_id(spot: Spotify) -> str:

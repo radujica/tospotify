@@ -6,9 +6,8 @@ from tospotify.processing import clean_name, process_song_name, clean_title
 @pytest.mark.parametrize('name,expected', [
     ('The Police', 'the police'),
     (' The  Police   ', 'the police'),
-    ('St-ing; The, Police', 'sting; the, police'),
-    ('ßtïngé', 'tng'),
-    ('é', ''),
+    ('St-ing; {The}, Police', 'st-ing; the, police'),
+    ('ßtïngé', 'ßtïngé'),
     ('Every Breath You Take (feat. Sting)', 'every breath you take (feat sting)'),
     ('Every Breath You Take [Acoustic]', 'every breath you take [acoustic]')
 ])
