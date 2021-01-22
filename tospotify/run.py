@@ -36,6 +36,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument('playlist_path', help='full path to the playlist', type=_m3u_file)
     parser.add_argument('--verbose', help='print all the steps when searching for songs', action='store_true')
     parser.add_argument('--public', help='playlist is public, otherwise private', action='store_true')
+    parser.add_argument('--convert', help='convert from locale default to utf-8', action='store_true')
     parser.add_argument('--playlist-id', help='do not create a new playlist, '
                                               'instead update the existing playlist with this id', type=str)
     parsed_args = parser.parse_args()
@@ -83,4 +84,4 @@ def main() -> None:
         playlist_id = args.playlist_id
         logging.info('Updating existing playlist with id={}'.format(playlist_id))
 
-    update_spotify_playlist(spot, playlist_path, playlist_id)
+    update_spotify_playlist(spot, playlist_path, playlist_id, args.convert)

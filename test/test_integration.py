@@ -9,6 +9,7 @@ from tospotify.run import main
 class MockArgs:
     def __init__(self, playlist_path, playlist_id=None):
         self.verbose = False
+        self.convert = False
         self.spotify_username = 'test_username'
         self.public = True
         self.playlist_path = playlist_path
@@ -24,7 +25,7 @@ class MockArgs:
     os.path.join('test', 'data', 'valid_playlist.m3u'),
     os.path.join('test', 'data', 'empty_playlist.m3u'),
     os.path.join('test', 'data', 'empty_playlist.m3u'),
-    os.path.join('test', 'data', 'valid_utf8.m3u8')
+    os.path.join('test', 'data', 'utf8_playlist.m3u8')
 ])
 def test_integration(mock_function, playlist):
     mock_function.return_value = MockArgs(playlist_path=playlist, playlist_id=1)

@@ -5,7 +5,7 @@ import m3u8
 from spotipy import Spotify
 
 from .generator import QueryGenerator
-from .parser import parse_songs
+from .parser import parse_songs, convert_utf8
 from .processing import process_song_name, MIN_LENGTH_NAME
 
 
@@ -97,6 +97,7 @@ def update_spotify_playlist(
         spot: Spotify,
         playlist_path: str,
         playlist_id: str,
+        to_convert: bool,
         market: str = None
 ) -> None:
     """ Read songs from an m3u file and update a Spotify playlist with these songs
@@ -107,10 +108,15 @@ def update_spotify_playlist(
     :type playlist_path: str
     :param playlist_id: Spotify id for the playlist to update
     :type playlist_id: str
+    :param to_convert: whether to convert file to utf-8
+    :type to_convert: bool
     :param market: market to look for songs in; see Spotipy docs
     :type market: str
     :return:
     """
+    if to_convert:
+        playlist_path = convert_utf8(playlist_path)
+
     songs = parse_songs(playlist_path)
 
     if len(songs) > 0:
