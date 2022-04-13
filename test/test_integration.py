@@ -24,7 +24,7 @@ class MockArgs:
 @pytest.mark.parametrize('playlist', [
     os.path.join('test', 'data', 'valid_playlist.m3u'),
     os.path.join('test', 'data', 'empty_playlist.m3u'),
-    os.path.join('test', 'data', 'empty_playlist.m3u'),
+    os.path.join('test', 'data', 'path_playlist.m3u'),
     os.path.join('test', 'data', 'utf8_playlist.m3u8')
 ])
 def test_integration(mock_function, playlist):
