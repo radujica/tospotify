@@ -18,7 +18,7 @@ def clean_title(title: str) -> str:
     :return: cleaned song title
     :rtype: str
     """
-    cleaned_title = re.sub(r'\([^)]*\)|\[[^)]*\]', '', title)
+    cleaned_title = re.sub(r'\([^)]*\)|\[[^)]*]', '', title)
     cleaned_title = re.sub(r'(\sfeat\..*)|(\sfeaturing.*)|(\sft\..*)', '', cleaned_title)
     cleaned_title = cleaned_title.strip()
 
@@ -37,13 +37,13 @@ def clean_name(name: str) -> str:
     :return: cleaned name
     :rtype: str
     """
-    cleaned_name = re.sub(r'[.{\}]', '', name)
+    cleaned_name = re.sub(r'[.{}]', '', name)
     cleaned_name = re.sub(r'\s+', ' ', cleaned_name)
     cleaned_name = cleaned_name.strip()
     cleaned_name = cleaned_name.lower()
 
     if len(cleaned_name) == 0:
-        logging.warning('Encountered empty string after cleaning. Original string={}'.format(name))
+        logging.warning(f'Encountered empty string after cleaning. Original string={name}')
 
     return cleaned_name
 
@@ -63,11 +63,10 @@ def process_song_name(song_name: str) -> Tuple[str, str]:
     song_split = song_name.split('-')
 
     if len(song_split) == 1:
-        raise ProcessingException('Could not split song into artist and title! song={}'.format(song_name))
+        raise ProcessingException(f'Could not split song into artist and title! song={song_name}')
 
     if len(song_split) != 2:
-        logging.warning('Encountered more than 2 chunks when splitting song into artist and title. '
-                        'song={}'.format(song_name))
+        logging.warning(f'Encountered more than 2 chunks when splitting song into artist and title. song={song_name}')
 
     artist = clean_name(song_split[0])
     title = clean_name(song_split[1])

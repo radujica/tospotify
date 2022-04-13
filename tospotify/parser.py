@@ -14,7 +14,7 @@ def convert_utf8(playlist_path: str) -> str:
     output_path = path_without_extension + '_utf8.m3u8'
 
     # here it uses the locale.getpreferredencoding, which could be cp1252 for Windows
-    with open(playlist_path, mode='r') as input_:
+    with open(playlist_path, mode='r') as input_:  # pylint: disable=unspecified-encoding
         with open(output_path, encoding='utf-8', mode='w') as output_:
             for line in input_.readlines():
                 output_.write(line.encode('utf-8').decode('utf-8'))

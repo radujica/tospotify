@@ -36,6 +36,6 @@ class CleanedTitle(Title):
         title = clean_title(self.title)
 
         if len(title) < MIN_LENGTH_NAME:
-            logging.warning('Encountered title after cleaning with too short name={}'.format(title))
+            logging.warning(f'Encountered title after cleaning with too short name={title}')
 
         return title

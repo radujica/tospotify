@@ -11,7 +11,7 @@ from .search import create_spotify_playlist, update_spotify_playlist
 
 def _m3u_file(path: str) -> Optional[str]:
     if not isinstance(path, str):
-        raise argparse.ArgumentTypeError('Path must be a string. Encountered type={}'.format(str(type(path))))
+        raise argparse.ArgumentTypeError(f'Path must be a string. Encountered type={str(type(path))}')
 
     splits = path.rsplit('.', 1)
     if len(splits) == 1:
@@ -24,7 +24,7 @@ def _m3u_file(path: str) -> Optional[str]:
     if extension in {'m3u', 'm3u8'}:
         return path
 
-    raise argparse.ArgumentTypeError('Only m3u files are supported. Encountered={}'.format(extension))
+    raise argparse.ArgumentTypeError(f'Only m3u files are supported. Encountered={extension}')
 
 
 def _parse_args() -> argparse.Namespace:
@@ -79,9 +79,9 @@ def main() -> None:
     if args.playlist_id is None:
         playlist_name = _extract_playlist_name(playlist_path)
         playlist_id = create_spotify_playlist(spot, playlist_name)
-        logging.info('Created playlist with name={} at id={}'.format(playlist_name, playlist_id))
+        logging.info(f'Created playlist with name={playlist_name} at id={playlist_id}')
     else:
         playlist_id = args.playlist_id
-        logging.info('Updating existing playlist with id={}'.format(playlist_id))
+        logging.info(f'Updating existing playlist with id={playlist_id}')
 
     update_spotify_playlist(spot, playlist_path, playlist_id, args.convert)

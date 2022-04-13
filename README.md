@@ -43,14 +43,15 @@ Take a look [below](#help) for more details and debugging tips.
 
 
 ## Requirements
-1. First need to enable Developer Dashboard and your 'app'.
+1. Python >= 3.6
+2. Enable Developer Dashboard and your 'app'.
 
     - Go to https://developer.spotify.com/dashboard/login
     - Create an app
     - Get the client id and client secret from there for step 2
     - Edit settings and whitelist a redirect uri; for default use `http://localhost:8888`
     
-2. Setup some environment variables:
+3. Setup some environment variables:
 
 ### Linux
 

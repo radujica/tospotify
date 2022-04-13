@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name='tospotify',
-    version='0.3',
+    version='0.3.1',
     description='Create/update a Spotify playlist from a local m3u playlist',
     url='https://github.com/radujica/tospotify',
     author='Radu Jica',
@@ -23,13 +23,14 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Topic :: Multimedia :: Sound/Audio',
         'Operating System :: OS Independent'
     ],
     packages=['tospotify', 'tospotify.types'],
     include_package_data=True,
     zip_safe=True,
-    install_requires=['spotipy', 'm3u8>=0.7.1'],
+    install_requires=['spotipy>=2.11.1', 'm3u8>=0.7.1'],
     entry_points={
         'console_scripts': ['tospotify=tospotify.run:main'],
     }
