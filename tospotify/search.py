@@ -46,9 +46,9 @@ def _run_query(spot: Spotify, query: str, market: str = None, iteration: int = 0
     uri = None
     if len(results) > 0:
         uri = results[0]['uri']
-        logging.info('{}Found track with query={} as uri={}'.format(prepend_pretty_print, query, uri))
+        logging.info(f'{prepend_pretty_print}Found track with query={query} as uri={uri}')
     else:
-        logging.info('{}Could not find track with query={}'.format(prepend_pretty_print, query))
+        logging.info(f'{prepend_pretty_print}Could not find track with query={query}')
 
     return uri
 
@@ -58,9 +58,9 @@ def _find_track(spot: Spotify, song: m3u8.Segment, market: str = None) -> Option
     artist, title = process_song_name(song.title())
 
     if len(artist) < MIN_LENGTH_NAME:
-        logging.warning('Encountered artist after processing with short name={}'.format(artist))
+        logging.warning(f'Encountered artist after processing with short name={artist}')
     if len(title) < MIN_LENGTH_NAME:
-        logging.warning('Encountered title after processing with short name={}'.format(title))
+        logging.warning(f'Encountered title after processing with short name={title}')
 
     query_generator = QueryGenerator(artist, title)
     iteration = 0
@@ -126,7 +126,7 @@ def update_spotify_playlist(
             if track_uri:
                 tracks.append(track_uri)
             else:
-                logging.warning('Could not find any track for song with artist - title={}'.format(song.title))
+                logging.warning(f'Could not find any track for song with artist - title={song.title}')
         if len(tracks) == 0:
             logging.error('Could not find any tracks on Spotify!')
         else:

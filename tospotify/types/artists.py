@@ -45,8 +45,7 @@ class ArtistBeginsWithThe(Artist):
         artist = self.artist[len(TOKEN_THE):]
 
         if len(artist) < MIN_LENGTH_NAME:
-            logging.warning('Encountered artist after removing "the" with '
-                            'too short name={}'.format(artist))
+            logging.warning(f'Encountered artist after removing "the" with too short name={artist}')
 
         yield artist
 
@@ -72,8 +71,8 @@ class MultipleTogetherArtist(MultipleArtist):
     def process(self) -> Generator[str, None, None]:
         artist = self.artist.replace(self.sep, self.to_sep, 1)
         if self.sep in artist:
-            logging.warning('Encountered more than 2 occurrences of sep={} when detecting artist '
-                            'as multiple artists. artist={}'.format(self.sep, self.artist))
+            logging.warning(f'Encountered more than 2 occurrences of sep={self.sep} '
+                            f'when detecting artist as multiple artists. artist={self.artist}')
 
         yield artist
 
@@ -100,8 +99,7 @@ class MultipleSplitArtist(MultipleArtist):
             artist = artist.strip()
 
             if len(artist) < MIN_LENGTH_NAME:
-                logging.warning('Encountered artist after splitting on={} '
-                                'with too short name={}'.format(self.sep, artist))
+                logging.warning(f'Encountered artist after splitting on={self.sep} with too short name={artist}')
 
             yield artist
 
