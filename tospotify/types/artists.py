@@ -16,7 +16,7 @@ class Artist:
     def __init__(self, artist: str) -> None:
         self.artist = artist
 
-    def makes_sense(self) -> bool:  # pylint: disable=no-self-use
+    def makes_sense(self) -> bool:
         """ Checks whether it makes sense to compile a query given this artist
 
         :return: True if a query would make sense, False otherwise
