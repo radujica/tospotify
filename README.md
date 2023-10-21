@@ -43,7 +43,7 @@ Take a look [below](#help) for more details and debugging tips.
 
 
 ## Requirements
-1. Python >= 3.6
+1. Python > 3.6
 2. Enable Developer Dashboard and your 'app'.
 
     - Go to https://developer.spotify.com/dashboard/login
