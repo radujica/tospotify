@@ -31,7 +31,7 @@ setup(
     packages=['tospotify', 'tospotify.types'],
     include_package_data=True,
     zip_safe=True,
-    install_requires=['spotipy>=2.11.1', 'm3u8>=0.7.1'],
+    install_requires=['spotipy>=2.11.1', 'm3u8>=0.7.1,<3.5'],
     entry_points={
         'console_scripts': ['tospotify=tospotify.run:main'],
     }
