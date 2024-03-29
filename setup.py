@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name='tospotify',
-    version='0.3.3-beta',
+    version='0.3.4',
     description='Create/update a Spotify playlist from a local m3u playlist',
     url='https://github.com/radujica/tospotify',
     author='Radu Jica',
