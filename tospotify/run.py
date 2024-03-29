@@ -45,7 +45,7 @@ def _parse_args() -> argparse.Namespace:
 
 
 def _parse_path(path: str) -> str:
-    if path.startswith('/'):
+    if os.path.isabs(path):
         return path
 
     return os.path.join(os.getcwd(), *path.split(os.sep))
