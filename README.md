@@ -1,6 +1,6 @@
 # Convert local playlists to Spotify playlists
 
-![Build, Test, Lint](https://github.com/radujica/tospotify/workflows/build.yml/badge.svg)
+![Build](https://github.com/radujica/tospotify/workflows/build.yml/badge.svg)
 [![PyPI version](https://badge.fury.io/py/tospotify.svg)](https://badge.fury.io/py/tospotify)
 
 Supports m3u and m3u8 files in the [Extended format](https://en.wikipedia.org/wiki/M3U) encoded as UTF-8.
