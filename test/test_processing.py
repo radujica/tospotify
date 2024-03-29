@@ -17,7 +17,7 @@ def test_clean_name(name, expected):
 
 @pytest.mark.parametrize('song,expected', [
     ('Sting - Englishman in new york', ('sting', 'englishman in new york')),
-    ('AC-DC - Hells Bells', ('ac', 'dc'))
+    ('AC-DC - Hells Bells', ('ac-dc', 'hells bells'))
 ])
 def test_process_song_name(song, expected):
     assert process_song_name(song) == expected

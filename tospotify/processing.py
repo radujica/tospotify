@@ -60,7 +60,9 @@ def process_song_name(song_name: str) -> Tuple[str, str]:
     :rtype: (str, str)
     :raises ProcessingException: if a song does not obey the Extended M3U8 formatting of "artist - title"
     """
-    song_split = song_name.split('-')
+    song_split = song_name.split(' - ')
+    if len(song_split) == 1:
+        song_split = song_name.split('-')
 
     if len(song_split) == 1:
         raise ProcessingException(f'Could not split song into artist and title! song={song_name}')
