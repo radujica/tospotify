@@ -47,5 +47,4 @@ class QueryGenerator:
                     title = t_class(self.title)
                     query = q_class(artist, title)
                     if query.makes_sense():
-                        for query2 in query.compile():
-                            yield query2  # pylint: disable=use-yield-from
+                        yield from query.compile()
